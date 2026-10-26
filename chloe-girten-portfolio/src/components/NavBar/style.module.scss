@@ -1,0 +1,42 @@
+.navBarContainer {
+  display: flex;
+  width: 166px;
+  flex-shrink: 0;
+  // height: 604px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  border-radius: 8px;
+  border: 1px solid #000;
+  background: #fffbf6;
+  pointer-events: all;
+
+  .navBar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .navLink {
+    display: flex;
+    padding: 10px 0;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    width: 100%;
+    border-radius: 6px;
+
+    p {
+      margin: 0;
+      color: inherit;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 120%; /* 16.8px */
+    }
+  }
+}

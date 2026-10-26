@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light;
+  --background: #fffbf6;
+  --foreground: #171717;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+  background: none;
+  border: 0;
+}
+
+body {
+  background: var(--background);
+  overflow-x: hidden;
+  color: var(--foreground);
+}

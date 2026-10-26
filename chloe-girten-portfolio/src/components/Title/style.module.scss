@@ -1,0 +1,27 @@
+.titleBackContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 28vh;
+  margin: 0;
+  padding: 20px 22px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+  z-index: -3;
+
+  .titleBack {
+    margin: 0;
+    white-space: nowrap;
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+    font-size: 210px;
+    font-weight: 500;
+    line-height: normal;
+  }
+}

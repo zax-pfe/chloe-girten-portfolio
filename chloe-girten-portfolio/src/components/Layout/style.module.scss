@@ -1,0 +1,38 @@
+.layout {
+  isolation: isolate;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    pointer-events: none;
+
+    .topPageContainer {
+      padding: 20px 22px 12px 22px;
+      width: 100%;
+      height: 28vh;
+      display: flex;
+      align-items: end;
+      justify-content: end;
+    }
+
+    .botPageContainer {
+      padding: 0px 22px 20px 22px;
+      width: 100%;
+      height: 72vh;
+      display: flex;
+
+      .main {
+        z-index: 1;
+        position: relative;
+        display: flex;
+        height: 100%;
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  }
+}

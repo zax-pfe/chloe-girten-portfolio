@@ -1,0 +1,9 @@
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 31px;
+  flex-shrink: 0;
+  pointer-events: all;
+}
