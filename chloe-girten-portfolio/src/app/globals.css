@@ -2,6 +2,15 @@
   color-scheme: light;
   --background: #fffbf6;
   --foreground: #171717;
+
+  /* Layout grid */
+  --grid-columns: 8;
+  --grid-margin: 22px;
+  --grid-gutter: 10px;
+  /* Width of one column, to align elements nested in other containers. */
+  --grid-col: calc(
+    (100vw - 2 * var(--grid-margin) - (var(--grid-columns) - 1) * var(--grid-gutter)) / var(--grid-columns)
+  );
 }
 
 * {

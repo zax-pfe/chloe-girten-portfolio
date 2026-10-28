@@ -1,0 +1,19 @@
+.stage {
+  position: absolute;
+  inset: 0;
+
+  .image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    visibility: hidden;
+    cursor: pointer;
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+
+    .img {
+      object-fit: contain;
+    }
+  }
+}

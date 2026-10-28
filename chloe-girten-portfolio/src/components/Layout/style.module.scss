@@ -11,7 +11,7 @@
     pointer-events: none;
 
     .topPageContainer {
-      padding: 20px 22px 12px 22px;
+      padding: 20px var(--grid-margin) 12px var(--grid-margin);
       width: 100%;
       height: 28vh;
       display: flex;
@@ -20,18 +20,25 @@
     }
 
     .botPageContainer {
-      padding: 0px 22px 20px 22px;
+      padding: 0px var(--grid-margin) 20px var(--grid-margin);
       width: 100%;
       height: 72vh;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+      // minmax(0, …) keeps the row at the container height instead of growing with the content.
+      grid-template-rows: minmax(0, 1fr);
+      column-gap: var(--grid-gutter);
 
       .main {
         z-index: 1;
         position: relative;
-        display: flex;
-        height: 100%;
-        flex: 1;
+        // Takes every column after the navbar and shares them with its children.
+        grid-column: 2 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-template-rows: minmax(0, 1fr);
         min-width: 0;
+        min-height: 0;
       }
     }
   }

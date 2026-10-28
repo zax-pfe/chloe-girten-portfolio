@@ -1,8 +1,8 @@
 .navBarContainer {
   display: flex;
-  width: 166px;
-  flex-shrink: 0;
-  // height: 604px;
+  // One grid column.
+  grid-column: span 1;
+  min-width: 0;
   padding: 10px;
   flex-direction: column;
   align-items: center;

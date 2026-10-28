@@ -1,0 +1,44 @@
+.exhibitionContainer {
+  display: grid;
+  // Text on the left half, image on the right half.
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid #000;
+
+  .infos {
+    display: grid;
+    // Name and year each take one column of the page grid, the description the rest.
+    grid-template-columns:
+      calc(var(--grid-col) + var(--grid-gutter))
+      calc(var(--grid-col) + var(--grid-gutter))
+      minmax(0, 1fr);
+
+    > div {
+      padding: 20px;
+    }
+
+    p {
+      color: #000;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+
+    .description {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+  }
+
+  .imageContainer {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-left: 1px solid #000;
+
+    .image {
+      object-fit: cover;
+    }
+  }
+}
