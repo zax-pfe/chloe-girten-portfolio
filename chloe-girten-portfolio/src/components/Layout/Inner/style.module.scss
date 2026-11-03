@@ -20,3 +20,8 @@
   pointer-events: auto;
   overflow: hidden;
 }
+
+.panel.compact {
+  // Three grid columns, right after the navbar.
+  grid-column: 1 / span 3;
+}
