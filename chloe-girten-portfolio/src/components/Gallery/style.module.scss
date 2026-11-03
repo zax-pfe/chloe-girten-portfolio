@@ -15,6 +15,12 @@
     border-bottom: 1px solid #000;
     border-right: 1px solid #000;
     position: relative;
+    cursor: pointer;
+
+    .background {
+      position: absolute;
+      inset: 0;
+    }
 
     .image {
       object-fit: cover;

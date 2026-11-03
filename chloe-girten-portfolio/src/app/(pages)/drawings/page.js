@@ -1,9 +1,11 @@
 import PageWrapper from "@/components/PageWrapper/PageWrapper";
+import Gallery from "@/components/Gallery/Gallery";
+import { drawingData } from "@/data/drawingData";
 
 export default function Drawings() {
   return (
     <PageWrapper>
-      <h2>Drawings</h2>
+      <Gallery items={drawingData} />
     </PageWrapper>
   );
 }
