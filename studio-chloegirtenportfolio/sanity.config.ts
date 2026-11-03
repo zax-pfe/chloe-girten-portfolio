@@ -1,4 +1,4 @@
-import {defineConfig} from 'sanity'
+import {defineConfig, defineSingleton} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
@@ -14,5 +14,14 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  document: {
+    // One document each, with a fixed id.
+    singletons: [
+      defineSingleton({documentId: 'about', schemaType: 'about'}),
+      defineSingleton({documentId: 'world', schemaType: 'world'}),
+      defineSingleton({documentId: 'floatingPieces', schemaType: 'floatingPieces'}),
+    ],
   },
 })

@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+// Loads straight from the Sanity image CDN at the size next/image asks for.
+import { Image } from "next-sanity/image";
 import { motion } from "framer-motion";
 import ViewButton from "../ViewButton/ViewButton";
 import styles from "./style.module.scss";

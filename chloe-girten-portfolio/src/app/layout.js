@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import Layout from "@/components/Layout/Layout";
 import Providers from "./providers";
+import { SanityLive } from "@/sanity/live";
 import "./globals.css";
 
 const raleway = localFont({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <Layout>{children}</Layout>
         </Providers>
+        <SanityLive />
       </body>
     </html>
   );

@@ -17,6 +17,14 @@ export const piece = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'imageNoBg',
+      title: 'Image détourée',
+      description:
+        "Même image sans fond (PNG transparent), aux mêmes dimensions que l'image. Affichée par défaut, le fond apparaît au survol. Aussi utilisée dans le fond animé : importer en haute résolution.",
+      type: 'image',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'title',
       title: 'Titre',
       type: 'string',

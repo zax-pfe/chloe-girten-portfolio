@@ -1,11 +1,14 @@
 import PageWrapper from "@/components/PageWrapper/PageWrapper";
 import PieceGallery from "@/components/PieceGallery/PieceGallery";
-import { pieceImgData } from "@/data/pieceImgData";
+import { sanityFetch } from "@/sanity/live";
+import { PIECES_QUERY } from "@/sanity/queries";
 
-export default function Pieces() {
+export default async function Pieces() {
+  const { data: pieces } = await sanityFetch({ query: PIECES_QUERY });
+
   return (
     <PageWrapper>
-      <PieceGallery items={pieceImgData} />
+      <PieceGallery items={pieces} />
     </PageWrapper>
   );
 }
