@@ -22,6 +22,6 @@
 }
 
 .panel.compact {
-  // Three grid columns, right after the navbar.
-  grid-column: 1 / span 3;
+  // A few grid columns, right after the navbar.
+  grid-column: 1 / span var(--panel-compact-columns);
 }

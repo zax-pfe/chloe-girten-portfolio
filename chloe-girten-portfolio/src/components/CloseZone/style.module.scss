@@ -1,11 +1,28 @@
-.closeZone {
+.top,
+.side {
   position: fixed;
+  // Same layer as the background blur but rendered after it: above it,
+  // below the navbar and the close button (z-index 2) which keep working.
+  z-index: 1;
+  cursor: pointer;
+}
+
+// Over the title.
+.top {
   top: 0;
   left: 0;
   width: 100%;
   height: var(--header-height);
-  // Same layer as the background blur but rendered after it: above it,
-  // below the close button (z-index 2) which keeps working.
-  z-index: 1;
-  cursor: pointer;
+}
+
+// From the right edge of the small panel to the right and bottom of the screen.
+// Panel edge = margin + navbar column + panel columns, with the gutters between them.
+.side {
+  top: var(--header-height);
+  right: 0;
+  bottom: 0;
+  left: calc(
+    var(--grid-margin) + (var(--panel-compact-columns) + 1) * var(--grid-col) + var(--panel-compact-columns) *
+      var(--grid-gutter)
+  );
 }

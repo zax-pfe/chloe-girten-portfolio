@@ -1,0 +1,52 @@
+.contactLink {
+  position: relative;
+  // Keeps the fill (z-index -1) above the panel background but behind the text.
+  isolation: isolate;
+  // Only the part of the fill inside the row is visible.
+  overflow: hidden;
+}
+
+// Black background the size of the row, resting just below it (hidden).
+// gsap moves it up into the row on hover, then on up and out through the top.
+.fill {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: #000;
+  pointer-events: none;
+}
+
+// Window the size of one arrow: only the arrow inside it is visible.
+.arrow {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+
+  // Same size as the window; gsap moves it along the diagonal.
+  .track {
+    position: absolute;
+    inset: 0;
+
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    // Second arrow: one size down and to the left, outside the window,
+    // on the same diagonal as the first.
+    svg:last-child {
+      top: 100%;
+      left: -100%;
+    }
+  }
+}

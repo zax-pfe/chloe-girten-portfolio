@@ -11,16 +11,20 @@ function mod(n, m) {
 
 const lerp = (start, end, t) => start + (end - start) * t;
 
-// Each row is offset by the scroll, then wrapped with a modulo over the grid height:
-// a row leaving the top comes back at the bottom.
+// Position of a row, in cells: offset by the scroll, then wrapped with a modulo over
+// the grid height, so a row leaving the top comes back at the bottom.
+function rowPosition(row, rows, scrollInCells) {
+  return mod(row - scrollInCells + 1, rows) - 1;
+}
+
 function placeRows(elements, size, rows, scrollY) {
-  const totalHeight = rows * size;
+  // Not measured yet: nothing to place.
+  if (!size) return;
 
   elements.forEach((element, index) => {
     if (!element) return;
     const row = Math.floor(index / CONFIG.COLS);
-    const y = mod(row * size - scrollY + size, totalHeight) - size;
-    gsap.set(element, { y });
+    gsap.set(element, { y: rowPosition(row, rows, scrollY / size) * size });
   });
 }
 
@@ -48,7 +52,11 @@ export default function DrawingGrid({ items }) {
     const container = containerRef.current;
     const measure = () => {
       cellSize.current = container.offsetWidth / CONFIG.COLS;
+      if (!cellSize.current) return;
       placeRows(elementRef.current, cellSize.current, rows, scroll.current.current);
+      // Rows are in place: show the grid, hidden in CSS until now so the rows
+      // are never seen stacked before the JS has positioned them.
+      gsap.set(container, { autoAlpha: 1 });
     };
     measure();
 

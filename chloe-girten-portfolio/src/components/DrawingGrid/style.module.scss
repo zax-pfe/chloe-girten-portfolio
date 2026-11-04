@@ -4,6 +4,8 @@
   // Fills the panel; the drawings move inside instead of the page scrolling.
   height: 100cqh;
   overflow: hidden;
+  // Revealed by gsap (autoAlpha) once the rows are positioned.
+  visibility: hidden;
 
   .cell {
     position: absolute;
