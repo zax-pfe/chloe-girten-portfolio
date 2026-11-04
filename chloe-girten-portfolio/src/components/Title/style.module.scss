@@ -10,17 +10,23 @@
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 
   pointer-events: none;
   z-index: -3;
 
   .titleBack {
-    margin: 0;
+    // Measured on "Chloe Girten" in Raleway Medium (with kerning):
+    // the drawn letters are 5.729em wide and the "C" starts 0.039em after the text box.
+    --title-ink-width: 5.729;
+    --title-ink-left: 0.039em;
+
+    // The drawn letters fill the space between the two grid margins at any screen width.
+    margin: 0 0 0 calc(-1 * var(--title-ink-left));
     white-space: nowrap;
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
-    font-size: 210px;
+    font-size: calc((100vw - 2 * var(--grid-margin)) / var(--title-ink-width));
     font-weight: 500;
     line-height: normal;
   }

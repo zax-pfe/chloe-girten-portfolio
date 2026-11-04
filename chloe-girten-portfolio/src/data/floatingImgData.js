@@ -1,11 +1,11 @@
-import floating1 from "../../public/floating_img/1.png";
-import floating2 from "../../public/floating_img/2.png";
-import floating3 from "../../public/floating_img/3.png";
-import floating4 from "../../public/floating_img/4.png";
-import floating5 from "../../public/floating_img/5.png";
-import floating6 from "../../public/floating_img/6.png";
-import floating7 from "../../public/floating_img/7.png";
-import floating8 from "../../public/floating_img/8.png";
+import floating1 from "../../public/floating_img/floating_1.png";
+import floating2 from "../../public/floating_img/floating_2.png";
+import floating3 from "../../public/floating_img/floating_3.png";
+import floating4 from "../../public/floating_img/floating_4.png";
+import floating5 from "../../public/floating_img/floating_5.png";
+import floating6 from "../../public/floating_img/floating_6.png";
+import floating7 from "../../public/floating_img/floating_7.png";
+import floating8 from "../../public/floating_img/floating_8.png";
 
 const description =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
