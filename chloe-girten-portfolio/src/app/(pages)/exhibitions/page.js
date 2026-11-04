@@ -1,13 +1,16 @@
 import PageWrapper from "@/components/PageWrapper/PageWrapper";
 import Exhibition from "@/components/Exhibition/Exhibition";
-import { exhibitionData } from "@/data/exhibitionData";
+import { sanityFetch } from "@/sanity/live";
+import { EXHIBITIONS_QUERY } from "@/sanity/queries";
 import styles from "./page.module.scss";
 
-export default function Exhibitions() {
+export default async function Exhibitions() {
+  const { data: exhibitions } = await sanityFetch({ query: EXHIBITIONS_QUERY });
+
   return (
     <PageWrapper>
       <div className={styles.list}>
-        {exhibitionData.map((exhibition) => (
+        {exhibitions.map((exhibition) => (
           <Exhibition key={exhibition.id} {...exhibition} />
         ))}
       </div>

@@ -5,7 +5,7 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 // The motion of each image (speed, direction...) stays in the frontend code.
 export const floatingPieces = defineType({
   name: 'floatingPieces',
-  title: 'Fond animé',
+  title: 'Animated Background',
   type: 'document',
   icon: SparklesIcon,
   fields: [

@@ -3,7 +3,7 @@ import {defineField, defineType} from 'sanity'
 
 export const drawing = defineType({
   name: 'drawing',
-  title: 'Dessin',
+  title: 'Drawings',
   type: 'document',
   icon: EditIcon,
   fields: [

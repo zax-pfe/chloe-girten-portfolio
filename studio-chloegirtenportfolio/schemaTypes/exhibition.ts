@@ -3,7 +3,7 @@ import {defineField, defineType} from 'sanity'
 
 export const exhibition = defineType({
   name: 'exhibition',
-  title: 'Exposition',
+  title: 'Exhibitions',
   type: 'document',
   icon: CalendarIcon,
   fields: [

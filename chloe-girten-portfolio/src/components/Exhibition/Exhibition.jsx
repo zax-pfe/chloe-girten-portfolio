@@ -1,9 +1,9 @@
-import Image from "next/image";
-import ArrowSVG from "../ArrowSVG/ArrowSVG";
+// Loads straight from the Sanity image CDN at the size next/image asks for.
+import { Image } from "next-sanity/image";
 import CursorTarget from "../CursorTarget/CursorTarget";
 import styles from "./style.module.scss";
 
-export default function Exhibition({ name, year, description, image }) {
+export default function Exhibition({ name, year, description, url }) {
   return (
     <CursorTarget as="article" type="exhibition" className={styles.exhibitionContainer}>
       <div className={styles.infos}>
@@ -15,12 +15,11 @@ export default function Exhibition({ name, year, description, image }) {
         </div>
         <div className={styles.description}>
           <p>{description}</p>
-          <ArrowSVG />
         </div>
       </div>
 
       <div className={styles.imageContainer}>
-        <Image src={image} alt={name} fill sizes="50vw" className={styles.image} />
+        <Image src={url} alt={name} fill sizes="50vw" className={styles.image} />
       </div>
     </CursorTarget>
   );

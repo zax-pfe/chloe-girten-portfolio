@@ -4,7 +4,7 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 // Singleton: a single document, registered in sanity.config.ts.
 export const about = defineType({
   name: 'about',
-  title: 'À propos',
+  title: 'About',
   type: 'document',
   icon: UserIcon,
   fields: [
