@@ -28,6 +28,8 @@ const raleway = localFont({
     },
   ],
   display: "swap",
+  // Exposed as a CSS variable for the font tokens in globals.css.
+  variable: "--font-raleway",
 });
 
 export const metadata = {
@@ -37,7 +39,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={raleway.variable}>
       <body className={raleway.className}>
         <Providers>
           <Layout>{children}</Layout>

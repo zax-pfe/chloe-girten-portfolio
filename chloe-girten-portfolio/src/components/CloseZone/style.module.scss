@@ -1,0 +1,11 @@
+.closeZone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  // Same layer as the background blur but rendered after it: above it,
+  // below the close button (z-index 2) which keeps working.
+  z-index: 1;
+  cursor: pointer;
+}

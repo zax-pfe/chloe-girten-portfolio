@@ -1,0 +1,21 @@
+.cursorFollower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  pointer-events: none;
+  // White + difference = negative of what is behind.
+  // On this element: it is the stacking context that blends with the page.
+  mix-blend-mode: difference;
+
+  // Centered on the cursor.
+  .label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    translate: -50% -50%;
+    color: #fff;
+    font: var(--font-cursor);
+    white-space: nowrap;
+  }
+}

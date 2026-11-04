@@ -8,3 +8,12 @@ export const usePieceStore = create((set) => ({
   closePiece: () => set({ isModalOpen: false }),
   clearPiece: () => set({ selectedPiece: null }),
 }));
+
+// Kind of element under the cursor ("piece"...), read by the cursor follower to pick its label.
+export const useCursorStore = create((set) => ({
+  hovered: null,
+  setHovered: (type) => set({ hovered: type }),
+  // Only clears its own type: hover end and hover start of two elements can arrive in any order
+  // (framer-motion and React pointer events are not dispatched at the same time).
+  clearHovered: (type) => set((state) => (state.hovered === type ? { hovered: null } : state)),
+}));

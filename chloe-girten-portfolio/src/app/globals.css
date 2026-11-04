@@ -3,6 +3,9 @@
   --background: #fffbf6;
   --foreground: #171717;
 
+  /* Height of the top band with the title and the close button */
+  --header-height: 28vh;
+
   /* Layout grid */
   --grid-columns: 8;
   --grid-margin: 22px;
@@ -11,12 +14,30 @@
   --grid-col: calc(
     (100vw - 2 * var(--grid-margin) - (var(--grid-columns) - 1) * var(--grid-gutter)) / var(--grid-columns)
   );
+
+  /* Fonts, used with `font: var(--font-…)`: style weight size/line-height family */
+  --font-nav: normal 400 13px/120% var(--font-raleway), sans-serif;
+  --font-exhibition: normal 400 14px/normal Helvetica, Arial, sans-serif;
+  --font-cursor: normal 400 46px/120% Helvetica, Arial, sans-serif;
+  --font-contact-link: normal 400 42px/120% Helvetica, Arial, sans-serif;
+  --font-contact-text: normal 400 14px/120% Helvetica, Arial, sans-serif;
+
+  /* Border radius */
+  --radius-navbar: 10px;
+  --radius-panel: 8px;
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  /* Scrolling still works, the scrollbar is just not drawn. */
+  scrollbar-width: none;
+}
+
+/* Safari and older Chrome, which ignore scrollbar-width. */
+*::-webkit-scrollbar {
+  display: none;
 }
 
 html,

@@ -2,10 +2,8 @@
   display: flex;
   gap: 20px;
   width: 100%;
-  // Fills the panel and scrolls as a whole, so the scrollbar sits on the right edge.
-  height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  // Scrolled by the panel (PageWrapper), the image stays in place with sticky.
+  min-height: 100cqh;
 
   .text {
     flex: 1;
@@ -32,8 +30,8 @@
     top: 10px;
     align-self: flex-start;
     flex-shrink: 0;
-    // Percentage of the scroll container's height, not of the scrolled content.
-    height: calc(100% - 20px);
+    // Panel height (cqh), not the height of the scrolled text.
+    height: calc(100cqh - 20px);
     aspect-ratio: 3 / 4;
     margin: 10px 10px 10px 0;
 

@@ -1,3 +1,9 @@
+// Above the background blur panel (z-index 1): stays sharp and clickable.
+.closeButtonContainer {
+  position: relative;
+  z-index: 2;
+}
+
 .closeButton {
   display: flex;
   align-items: center;

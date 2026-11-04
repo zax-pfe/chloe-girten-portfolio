@@ -8,35 +8,37 @@
   align-items: center;
   gap: 10px;
 
-  border-radius: 8px;
+  border-radius: var(--radius-navbar);
   border: 1px solid #000;
   background: #fffbf6;
   pointer-events: all;
+  // Above the background blur panel (z-index 1): stays sharp and hoverable.
+  position: relative;
+  z-index: 2;
 
   .navBar {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 10px;
+    padding-top: 10px;
   }
 
   .navLink {
     display: flex;
-    padding: 10px 0;
+    padding: 20px 0;
     justify-content: center;
     align-items: center;
     gap: 10px;
     align-self: stretch;
     width: 100%;
-    border-radius: 6px;
+    // Pill shape, whatever the height.
+    border-radius: 999px;
 
     p {
       margin: 0;
       color: inherit;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 600;
-      line-height: 120%; /* 16.8px */
+      font: var(--font-nav);
     }
   }
 }

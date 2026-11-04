@@ -1,0 +1,25 @@
+.drawingGrid {
+  position: relative;
+  width: 100%;
+  // Fills the panel; the drawings move inside instead of the page scrolling.
+  height: 100cqh;
+  overflow: hidden;
+
+  .cell {
+    position: absolute;
+    top: 0;
+    aspect-ratio: 1 / 1;
+    user-select: none;
+
+    // Margin around the drawing; inset percentages are relative to the cell
+    // (a padding in % would be relative to the whole grid width).
+    .imageContainer {
+      position: absolute;
+      inset: 12%;
+
+      .image {
+        object-fit: contain;
+      }
+    }
+  }
+}

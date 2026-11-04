@@ -1,0 +1,9 @@
+.backgroundBlur {
+  position: fixed;
+  inset: 0;
+  // Same layer as the floating images but rendered after them: above them and the title,
+  // below the navbar and the page content.
+  z-index: 1;
+  // The CSS pipeline adds the -webkit- prefix itself; writing both made it keep only the prefixed one.
+  backdrop-filter: blur(5px);
+}

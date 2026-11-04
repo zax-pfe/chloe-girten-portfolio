@@ -1,5 +1,7 @@
 .layout {
   isolation: isolate;
+  // Gives blend modes (cursor follower) an opaque backdrop inside the isolated layout.
+  background: var(--background);
   width: 100%;
   height: 100vh;
   position: relative;
@@ -13,7 +15,7 @@
     .topPageContainer {
       padding: 20px var(--grid-margin) 12px var(--grid-margin);
       width: 100%;
-      height: 28vh;
+      height: var(--header-height);
       display: flex;
       align-items: end;
       justify-content: end;
@@ -22,7 +24,7 @@
     .botPageContainer {
       padding: 0px var(--grid-margin) 20px var(--grid-margin);
       width: 100%;
-      height: 72vh;
+      height: calc(100vh - var(--header-height));
       display: grid;
       grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
       // minmax(0, …) keeps the row at the container height instead of growing with the content.
