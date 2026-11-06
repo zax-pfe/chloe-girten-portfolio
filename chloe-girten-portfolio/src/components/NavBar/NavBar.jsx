@@ -35,8 +35,12 @@ export default function NavBar() {
               animate={{
                 backgroundColor: isActive ? "#000000" : "#fffbf6",
                 color: isActive ? "#ffffff" : "#000000",
+                // Off-black (#121212), transparent until hovered.
+                borderColor: "rgba(18, 18, 18, 0)",
               }}
-              transition={{ duration: reduceMotion ? 0 : 0.22, ease: "easeInOut" }}
+              // Ignored on touch, so the border never sticks after a tap.
+              whileHover={{ borderColor: "rgba(18, 18, 18, 1)" }}
+              transition={{ duration: reduceMotion ? 0 : 0.2, ease: "easeInOut" }}
               aria-current={isActive ? "page" : undefined}
             >
               <p>{label}</p>

@@ -1,10 +1,16 @@
+.full,
 .top,
 .side {
   position: fixed;
-  // Same layer as the background blur but rendered after it: above it,
-  // below the navbar and the close button (z-index 2) which keep working.
+  // Same layer as the background blur but rendered after it: above it and the floating images,
+  // below the navbar (z-index 2), the page panel and the piece panel, which keep working.
   z-index: 1;
   cursor: pointer;
+}
+
+// Whole screen, while a piece is open on the home page.
+.full {
+  inset: 0;
 }
 
 // Over the title.

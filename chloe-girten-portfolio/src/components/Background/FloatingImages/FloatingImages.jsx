@@ -155,11 +155,10 @@ export default function FloatingImages() {
   const hasSelection = usePieceStore((state) => state.selectedPiece !== null);
 
   const handleSelect = (id) => {
-    const { selectedPiece, isModalOpen, openPiece, closePiece } = usePieceStore.getState();
-    if (selectedPiece) {
-      if (isModalOpen && selectedPiece.id === id) closePiece();
-      return;
-    }
+    const { selectedPiece, openPiece } = usePieceStore.getState();
+    // An open piece is closed by the close zone over the screen (CloseZone);
+    // a closing one has to be back in place before another can open.
+    if (selectedPiece) return;
     openPiece(floatingImgData.find((piece) => piece.id === id));
   };
 

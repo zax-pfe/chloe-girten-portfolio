@@ -12,6 +12,19 @@ export const PIECES_QUERY = defineQuery(`
   }
 `);
 
+// Drawings without an image are skipped. The hover image is optional:
+// "hover" is null when there is none, and the grid then shows no swap.
+export const DRAWINGS_QUERY = defineQuery(`
+  *[_type == "drawing" && defined(image.asset)] | order(date desc, _createdAt desc) {
+    "id": _id,
+    title,
+    date,
+    description,
+    "url": image.asset->url,
+    "hover": imageHover.asset->url
+  }
+`);
+
 // Singleton with a fixed id. The text has no styles or marks in the studio,
 // so each block is flattened to a plain string, one per paragraph.
 export const ABOUT_QUERY = defineQuery(`

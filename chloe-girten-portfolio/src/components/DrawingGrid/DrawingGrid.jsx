@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef } from "react";
-import Image from "next/image";
+// Loads straight from the Sanity image CDN at the size next/image asks for.
+import { Image } from "next-sanity/image";
 import { gsap } from "gsap";
 import styles from "./style.module.scss";
 
@@ -101,7 +102,7 @@ export default function DrawingGrid({ items }) {
           ref={(element) => (elementRef.current[index] = element)}
           style={{ left: `${((index % CONFIG.COLS) * 100) / CONFIG.COLS}%`, width: `${100 / CONFIG.COLS}%` }}
         >
-          <div className={styles.imageContainer}>
+          <div className={`${styles.imageContainer} ${item.hover ? styles.hasHover : ""}`}>
             <Image
               src={item.url}
               alt={item.title}
@@ -110,6 +111,17 @@ export default function DrawingGrid({ items }) {
               sizes={`${Math.ceil(100 / CONFIG.COLS)}vw`}
               draggable={false}
             />
+            {/* Rendered (hidden) from the start so it is loaded before the hover: the swap is instant. */}
+            {item.hover && (
+              <Image
+                src={item.hover}
+                alt=""
+                className={`${styles.image} ${styles.hoverImage}`}
+                fill
+                sizes={`${Math.ceil(100 / CONFIG.COLS)}vw`}
+                draggable={false}
+              />
+            )}
           </div>
         </div>
       ))}

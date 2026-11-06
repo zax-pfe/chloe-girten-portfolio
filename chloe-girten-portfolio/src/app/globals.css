@@ -3,7 +3,7 @@
   --background: #fffbf6;
   --foreground: #171717;
 
-  /* Height of the top band with the title and the close button */
+  /* Height of the top band with the title */
   --header-height: 28vh;
 
   /* Layout grid */
@@ -23,9 +23,11 @@
   --font-cursor: normal 400 46px/120% Helvetica, Arial, sans-serif;
   --font-contact-link: normal 400 42px/120% Helvetica, Arial, sans-serif;
   --font-contact-text: normal 400 14px/120% Helvetica, Arial, sans-serif;
+  --font-piece-name: normal 400 72px/normal Helvetica, Arial, sans-serif;
+  --font-piece-text: normal 400 14px/normal Helvetica, Arial, sans-serif;
 
   /* Border radius */
-  --radius-navbar: 10px;
+  --radius-navbar: 30px;
   --radius-panel: 8px;
 }
 

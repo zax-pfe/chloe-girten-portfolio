@@ -17,6 +17,12 @@ export const drawing = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'imageHover',
+      title: 'Image au survol',
+      description: 'Optionnelle. Affichée à la place du dessin quand la souris passe dessus.',
+      type: 'image',
+    }),
+    defineField({
       name: 'title',
       title: 'Titre',
       type: 'string',

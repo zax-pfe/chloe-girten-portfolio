@@ -1,11 +1,14 @@
 import PageWrapper from "@/components/PageWrapper/PageWrapper";
 import DrawingGrid from "@/components/DrawingGrid/DrawingGrid";
-import { drawingData } from "@/data/drawingData";
+import { sanityFetch } from "@/sanity/live";
+import { DRAWINGS_QUERY } from "@/sanity/queries";
 
-export default function Drawings() {
+export default async function Drawings() {
+  const { data: drawings } = await sanityFetch({ query: DRAWINGS_QUERY });
+
   return (
     <PageWrapper>
-      <DrawingGrid items={drawingData} />
+      <DrawingGrid items={drawings} />
     </PageWrapper>
   );
 }

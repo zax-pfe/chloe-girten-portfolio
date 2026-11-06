@@ -22,6 +22,25 @@
       .image {
         object-fit: contain;
       }
+
+      // Hover image: swapped in place of the drawing, no transition.
+      // visibility (not display) so the hidden image still loads beforehand.
+      .hoverImage {
+        visibility: hidden;
+      }
+
+      // Only on devices that really hover: avoids the hover image sticking after a tap.
+      @media (hover: hover) {
+        &.hasHover:hover {
+          .image:not(.hoverImage) {
+            visibility: hidden;
+          }
+
+          .hoverImage {
+            visibility: visible;
+          }
+        }
+      }
     }
   }
 }

@@ -1,67 +1,40 @@
 .modalContainer {
   position: relative;
   z-index: 0;
-  // Three grid columns, right after the navbar.
+  // Three grid columns right after the navbar, at the bottom of the row.
   grid-column: 1 / span 3;
   grid-row: 1;
+  align-self: end;
+  // Grows if a long name wraps on a narrow screen.
+  min-height: 160px;
   min-width: 0;
   pointer-events: auto;
-  border-radius: 8px;
+  border-radius: var(--radius-panel);
   border: 1px solid #000;
   background: #fffbf6;
-  padding: 13px 20px 20px 20px;
+  padding: 10px;
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
+  justify-content: space-between;
+  color: #000;
 
-  .topContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .pieceName {
-      color: #000;
-      font-family: Raleway;
-      font-size: 40px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: normal;
-    }
-    .closeButton {
-      // background-color: rebeccapurple;
-      width: 31px;
-      height: 31px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
+  .pieceName {
+    font: var(--font-piece-name);
   }
 
   .botContainer {
     display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
 
-    .year {
-      flex: 1;
-      p {
-        color: #000;
-        font-family: Raleway;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-      }
+    .year,
+    .learnMore {
+      font: var(--font-piece-text);
     }
-    .description {
-      flex: 1;
-      p {
-        color: #000;
-        font-family: Raleway;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-      }
+
+    .learnMore {
+      cursor: pointer;
     }
   }
 }

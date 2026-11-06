@@ -12,16 +12,9 @@
     position: relative;
     pointer-events: none;
 
-    .topPageContainer {
-      padding: 20px var(--grid-margin) 12px var(--grid-margin);
-      width: 100%;
-      height: var(--header-height);
-      display: flex;
-      align-items: end;
-      justify-content: end;
-    }
-
     .botPageContainer {
+      // Below the title band.
+      margin-top: var(--header-height);
       padding: 0px var(--grid-margin) 20px var(--grid-margin);
       width: 100%;
       height: calc(100vh - var(--header-height));

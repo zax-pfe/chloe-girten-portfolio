@@ -4,8 +4,9 @@ import styles from "./style.module.scss";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePieceStore } from "@/store/store";
-import ButtonSVG from "./ButtonSVG";
 
+// Small panel at the bottom of the screen for the selected piece.
+// It closes by clicking anywhere else (see CloseZone) or with Escape.
 export default function Modal() {
   const selectedPiece = usePieceStore((state) => state.selectedPiece);
   const isModalOpen = usePieceStore((state) => state.isModalOpen);
@@ -31,20 +32,13 @@ export default function Modal() {
           exit={{ opacity: 0, pointerEvents: "none" }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         >
-          <div className={styles.topContainer}>
-            <h2 className={styles.pieceName}>{selectedPiece.title}</h2>
-            <button type="button" className={styles.closeButton} onClick={closePiece}>
-              <ButtonSVG />
-            </button>
-          </div>
+          <h2 className={styles.pieceName}>{selectedPiece.title}</h2>
 
           <div className={styles.botContainer}>
-            <div className={styles.year}>
-              <p>{selectedPiece.date}</p>
-            </div>
-            <div className={styles.description}>
-              <p>{selectedPiece.description}</p>
-            </div>
+            <p className={styles.year}>{selectedPiece.date}</p>
+            <button type="button" className={styles.learnMore}>
+              Learn more
+            </button>
           </div>
         </motion.section>
       )}
