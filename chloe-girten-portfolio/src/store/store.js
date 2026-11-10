@@ -9,7 +9,7 @@ export const usePieceStore = create((set) => ({
   clearPiece: () => set({ selectedPiece: null }),
 }));
 
-// Kind of element under the cursor ("piece"...), read by the cursor follower to pick its label.
+// Kind of element under the cursor ("piece"...), read by the cursor follower to pick its label or arrow.
 export const useCursorStore = create((set) => ({
   hovered: null,
   setHovered: (type) => set({ hovered: type }),

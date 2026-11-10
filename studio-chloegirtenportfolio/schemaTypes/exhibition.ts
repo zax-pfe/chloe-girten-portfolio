@@ -1,5 +1,5 @@
 import {CalendarIcon} from '@sanity/icons/Calendar'
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export const exhibition = defineType({
   name: 'exhibition',
@@ -38,6 +38,23 @@ export const exhibition = defineType({
         hotspot: true,
       },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Autres images',
+      description: "Pas de limite. Glisser-déposer pour changer l'ordre.",
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        }),
+      ],
+      options: {
+        layout: 'grid',
+      },
     }),
   ],
   preview: {

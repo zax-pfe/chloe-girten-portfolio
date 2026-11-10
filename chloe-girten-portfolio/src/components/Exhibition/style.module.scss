@@ -31,5 +31,21 @@
     .image {
       object-fit: cover;
     }
+
+    .previous,
+    .next {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+    }
+
+    .previous {
+      left: 0;
+    }
+
+    .next {
+      right: 0;
+    }
   }
 }

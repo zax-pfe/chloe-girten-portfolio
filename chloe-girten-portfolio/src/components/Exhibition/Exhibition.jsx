@@ -5,7 +5,7 @@ import styles from "./style.module.scss";
 
 export default function Exhibition({ name, year, description, url }) {
   return (
-    <CursorTarget as="article" type="exhibition" className={styles.exhibitionContainer}>
+    <article className={styles.exhibitionContainer}>
       <div className={styles.infos}>
         <div className={styles.name}>
           <p>{name}</p>
@@ -20,7 +20,10 @@ export default function Exhibition({ name, year, description, url }) {
 
       <div className={styles.imageContainer}>
         <Image src={url} alt={name} fill sizes="50vw" className={styles.image} />
+        {/* Each half shows its arrow while hovered. */}
+        <CursorTarget type="previous" className={styles.previous} />
+        <CursorTarget type="next" className={styles.next} />
       </div>
-    </CursorTarget>
+    </article>
   );
 }

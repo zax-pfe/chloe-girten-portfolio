@@ -8,8 +8,9 @@ import styles from "./style.module.scss";
 // Label shown for each kind of hovered element.
 const LABELS = {
   piece: "view",
-  exhibition: "learn more",
   close: "close x",
+  previous: "<",
+  next: ">",
 };
 
 const variant = {
