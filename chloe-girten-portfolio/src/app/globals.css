@@ -27,8 +27,8 @@
   --font-piece-text: normal 400 14px/normal Helvetica, Arial, sans-serif;
 
   /* Border radius */
-  --radius-navbar: 30px;
-  --radius-panel: 8px;
+  --radius-navbar: 35px;
+  --radius-panel: 35px;
 }
 
 * {
