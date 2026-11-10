@@ -1,0 +1,42 @@
+// Fills its container. The images outside of it are cut off.
+.carousel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    // Revealed by gsap once placed. The first one is already in place.
+    visibility: hidden;
+
+    &:first-child {
+      visibility: visible;
+    }
+  }
+
+  .image {
+    object-fit: cover;
+  }
+
+  // Each half shows its arrow while hovered.
+  .previous,
+  .next {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .previous {
+    left: 0;
+  }
+
+  .next {
+    right: 0;
+  }
+}

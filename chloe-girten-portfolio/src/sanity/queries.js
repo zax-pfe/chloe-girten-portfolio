@@ -39,12 +39,13 @@ export const ABOUT_QUERY = defineQuery(`
 `);
 
 // Exhibitions without an image are skipped, the row layout needs one.
+// "images": the main image first, then the other images in the studio order.
 export const EXHIBITIONS_QUERY = defineQuery(`
   *[_type == "exhibition" && defined(image.asset)] | order(year desc, _createdAt desc) {
     "id": _id,
     name,
     year,
     description,
-    "url": image.asset->url
+    "images": ([image] + coalesce(gallery, []))[defined(asset)].asset->url
   }
 `);

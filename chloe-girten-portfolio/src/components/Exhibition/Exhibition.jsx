@@ -1,9 +1,7 @@
-// Loads straight from the Sanity image CDN at the size next/image asks for.
-import { Image } from "next-sanity/image";
-import CursorTarget from "../CursorTarget/CursorTarget";
+import ExhibitionCarousel from "../ExhibitionCarousel/ExhibitionCarousel";
 import styles from "./style.module.scss";
 
-export default function Exhibition({ name, year, description, url }) {
+export default function Exhibition({ name, year, description, images }) {
   return (
     <article className={styles.exhibitionContainer}>
       <div className={styles.infos}>
@@ -19,10 +17,7 @@ export default function Exhibition({ name, year, description, url }) {
       </div>
 
       <div className={styles.imageContainer}>
-        <Image src={url} alt={name} fill sizes="50vw" className={styles.image} />
-        {/* Each half shows its arrow while hovered. */}
-        <CursorTarget type="previous" className={styles.previous} />
-        <CursorTarget type="next" className={styles.next} />
+        <ExhibitionCarousel images={images} name={name} />
       </div>
     </article>
   );
