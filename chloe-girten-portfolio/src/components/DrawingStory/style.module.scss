@@ -2,24 +2,25 @@
   width: 100%;
 }
 
+// Drawings layer, filling its positioned parent (section1, section3's drawings area).
+// Clipped here, not on the section: an overflow on section1 would make it a scroll
+// container and break the sticky text.
+.drawings {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+
+  .drawing {
+    position: absolute;
+    height: auto;
+    user-select: none;
+  }
+}
+
 .section1 {
   // Height comes from the data (inline style, in cqh).
   position: relative;
   width: 100%;
-
-  // Drawings layer. Clipped here, not on the section: an overflow on the section
-  // would make it a scroll container and break the sticky text.
-  .drawings {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-
-    .drawing {
-      position: absolute;
-      height: auto;
-      user-select: none;
-    }
-  }
 
   // Area the text can stick in: from the top of the section to textStop before its end
   // (bottom set inline from the data).
@@ -69,5 +70,22 @@
     width: 100%;
     height: auto;
     user-select: none;
+  }
+}
+
+.section3 {
+  width: 100%;
+
+  .text {
+    width: 75%;
+    padding-left: 10px;
+    font: var(--font-piece-text);
+    color: #000;
+  }
+
+  // Height comes from the data (inline style, in cqh).
+  .drawingsArea {
+    position: relative;
+    width: 100%;
   }
 }

@@ -6,8 +6,36 @@ import { gsap } from "gsap";
 import { drawingStoryData } from "@/data/drawingStoryData";
 import styles from "./style.module.scss";
 
-// Drawings placed freely in a tall section, every value comes from drawingStoryData.
-// The panel scrolls natively (smoothed by the PageWrapper's Lenis).
+// Drawings placed freely over the whole parent (absolute layer), every value comes from
+// drawingStoryData. The panel scrolls natively (smoothed by the PageWrapper's Lenis).
+function Drawings({ section }) {
+  return (
+    <div className={styles.drawings}>
+      {section.images.map((image) => {
+        const width = section.imageWidth * image.scale;
+
+        return (
+          <Image
+            key={image.id}
+            src={image.src}
+            alt={image.alt}
+            className={styles.drawing}
+            sizes={`${Math.ceil(width)}vw`}
+            draggable={false}
+            style={{
+              left: `${image.x}%`,
+              top: `${image.y}cqh`,
+              width: `${width}%`,
+              transform: `translate(-50%, -50%) rotate(${image.rotate}deg)`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+// Tall section of drawings, with the story text sticky in the middle of the panel.
 function Section1({ section, text }) {
   const textRef = useRef(null);
 
@@ -29,28 +57,7 @@ function Section1({ section, text }) {
 
   return (
     <section className={styles.section1} style={{ height: `${section.height}cqh` }}>
-      <div className={styles.drawings}>
-        {section.images.map((image) => {
-          const width = section.imageWidth * image.scale;
-
-          return (
-            <Image
-              key={image.id}
-              src={image.src}
-              alt={image.alt}
-              className={styles.drawing}
-              sizes={`${Math.ceil(width)}vw`}
-              draggable={false}
-              style={{
-                left: `${image.x}%`,
-                top: `${image.y}cqh`,
-                width: `${width}%`,
-                transform: `translate(-50%, -50%) rotate(${image.rotate}deg)`,
-              }}
-            />
-          );
-        })}
-      </div>
+      <Drawings section={section} />
 
       {/* The text sticks inside this layer, which ends textStop before the end of the section. */}
       <div className={styles.textLayer} style={{ bottom: `${section.textStop}px` }}>
@@ -81,6 +88,18 @@ function Section2({ section }) {
   );
 }
 
+// A text on the left, then a tall area of drawings placed like in section1.
+function Section3({ section }) {
+  return (
+    <section className={styles.section3}>
+      <p className={styles.text}>{section.text}</p>
+      <div className={styles.drawingsArea} style={{ height: `${section.height}cqh` }}>
+        <Drawings section={section} />
+      </div>
+    </section>
+  );
+}
+
 export default function DrawingStory() {
   const { text, sections } = drawingStoryData;
 
@@ -92,6 +111,9 @@ export default function DrawingStory() {
         }
         if (section.id === "section2") {
           return <Section2 key={section.id} section={section} />;
+        }
+        if (section.id === "section3") {
+          return <Section3 key={section.id} section={section} />;
         }
         return null;
       })}
