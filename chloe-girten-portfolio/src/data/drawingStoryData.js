@@ -6,12 +6,16 @@ import story5 from "../../public/drawing_img/Story/section_1/drawing_story_5.png
 import story6 from "../../public/drawing_img/Story/section_1/drawing_story_6.png";
 import story7 from "../../public/drawing_img/Story/section_1/drawing_story_7.png";
 
+import section2Left from "../../public/drawing_img/Story/section_2/left.png";
+import section2Right from "../../public/drawing_img/Story/section_2/right.png";
+
 // Story mode of the Drawings page.
 // "text" stays in the middle of the panel (sticky) while section1 scrolls behind it.
-// Sections are rendered in order: section1 (drawings scrolling behind the text), then section2 (to be designed).
+// Sections are rendered in order: section1 (drawings scrolling behind the text), then section2.
 //
 // section1:
 //   height     section height, in cqh (100 = one panel height)
+//   textStop   the text stops being sticky when its bottom is this far from the end of the section, in px
 //   imageWidth base width of a drawing, in % of the panel width (before its scale)
 //   images     one entry per drawing, all values free to edit:
 //     x        center of the drawing, in % of the panel width (0 = left edge, 100 = right edge)
@@ -19,6 +23,8 @@ import story7 from "../../public/drawing_img/Story/section_1/drawing_story_7.png
 //     rotate   rotation in degrees (negative = counter-clockwise)
 //     scale    multiplies imageWidth (1 = imageWidth, 2 = twice as big)
 //   Later drawings in the array are drawn above earlier ones.
+//
+// section2: at least one panel high, one image on each half, a small text in the top left corner.
 export const drawingStoryData = {
   text: "Ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
 
@@ -26,6 +32,7 @@ export const drawingStoryData = {
     {
       id: "section1",
       height: 670,
+      textStop: 50,
       imageWidth: 30,
       images: [
         { id: 1, src: story1, alt: "Dessin 1", x: 20, y: 55, rotate: 0, scale: 1.3 },
@@ -39,7 +46,9 @@ export const drawingStoryData = {
     },
     {
       id: "section2",
-      images: [],
+      text: "Nemo",
+      left: { src: section2Left, alt: "Dessin de cheval debout" },
+      right: { src: section2Right, alt: "Sculpture Nemo, cheval debout" },
     },
   ],
 };

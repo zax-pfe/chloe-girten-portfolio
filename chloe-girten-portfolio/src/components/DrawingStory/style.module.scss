@@ -21,23 +21,53 @@
     }
   }
 
+  // Area the text can stick in: from the top of the section to textStop before its end
+  // (bottom set inline from the data).
   .textLayer {
-    position: sticky;
+    position: absolute;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 1;
-    height: 100cqh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     // Lets the drawings underneath receive the cursor.
     pointer-events: none;
 
     .text {
+      position: sticky;
+      // Centered in the panel (100cqh = panel height), with its height measured in JS.
+      top: calc(50cqh - var(--text-height, 0px) / 2);
       max-width: 360px;
+      margin: 0 auto;
       font: var(--font-piece-text);
       color: #000;
       text-align: center;
       pointer-events: auto;
+      // Revealed by gsap (autoAlpha) once its height is measured.
+      visibility: hidden;
     }
+  }
+}
+
+.section2 {
+  position: relative;
+  width: 100%;
+  min-height: 100cqh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+  .text {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    font: var(--font-piece-text);
+    color: #000;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+    user-select: none;
   }
 }
