@@ -1,4 +1,43 @@
 .drawingStory {
   width: 100%;
-  height: 100vh;
+}
+
+.section1 {
+  // Height comes from the data (inline style, in cqh).
+  position: relative;
+  width: 100%;
+
+  // Drawings layer. Clipped here, not on the section: an overflow on the section
+  // would make it a scroll container and break the sticky text.
+  .drawings {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+
+    .drawing {
+      position: absolute;
+      height: auto;
+      user-select: none;
+    }
+  }
+
+  .textLayer {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 100cqh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // Lets the drawings underneath receive the cursor.
+    pointer-events: none;
+
+    .text {
+      max-width: 360px;
+      font: var(--font-piece-text);
+      color: #000;
+      text-align: center;
+      pointer-events: auto;
+    }
+  }
 }
