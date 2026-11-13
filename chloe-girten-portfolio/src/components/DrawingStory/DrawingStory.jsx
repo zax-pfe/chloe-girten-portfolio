@@ -88,14 +88,12 @@ function Section2({ section }) {
   );
 }
 
-// A text on the left, then a tall area of drawings placed like in section1.
+// A text on the left at the top, over drawings placed like in section1 (same top reference).
 function Section3({ section }) {
   return (
-    <section className={styles.section3}>
+    <section className={styles.section3} style={{ height: `${section.height}cqh` }}>
+      <Drawings section={section} />
       <p className={styles.text}>{section.text}</p>
-      <div className={styles.drawingsArea} style={{ height: `${section.height}cqh` }}>
-        <Drawings section={section} />
-      </div>
     </section>
   );
 }

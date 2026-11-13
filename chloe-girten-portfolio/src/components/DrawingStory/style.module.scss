@@ -74,18 +74,17 @@
 }
 
 .section3 {
+  // Height comes from the data (inline style, in cqh).
+  position: relative;
   width: 100%;
 
+  // Above the drawings, so they can be placed behind it.
   .text {
+    position: relative;
+    z-index: 1;
     width: 75%;
     padding-left: 10px;
-    font: var(--font-piece-text);
+    font: var(--font-story-text);
     color: #000;
-  }
-
-  // Height comes from the data (inline style, in cqh).
-  .drawingsArea {
-    position: relative;
-    width: 100%;
   }
 }

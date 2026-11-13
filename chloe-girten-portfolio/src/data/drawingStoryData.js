@@ -36,8 +36,8 @@ import section3Story9 from "../../public/drawing_img/Story/section_3/drawing_sto
 //
 // section2: at least one panel high, one image on each half, a small text in the top left corner.
 //
-// section3: a text on the left (75% of the width), then drawings placed like in section1
-// (height, imageWidth and images work the same; y starts below the text).
+// section3: a text on the left (75% of the width) at the top, over drawings placed like in section1
+// (height, imageWidth and images work the same; y starts at the top of the section, like the text).
 export const drawingStoryData = {
   text: "Ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
 
@@ -69,10 +69,10 @@ export const drawingStoryData = {
       height: 300,
       imageWidth: 10,
       images: [
-        { id: 1, src: section3Story1, alt: "Dessin 1", x: 15, y: 30, rotate: -6, scale: 1.6 },
-        { id: 2, src: section3Story2, alt: "Dessin 2", x: 45, y: 50, rotate: 8, scale: 2 },
-        { id: 3, src: section3Story3, alt: "Dessin 3", x: 80, y: 35, rotate: -12, scale: 2.1 },
-        { id: 4, src: section3Story4, alt: "Dessin 4", x: 30, y: 110, rotate: 4, scale: 4 },
+        { id: 1, src: section3Story1, alt: "Dessin 1", x: 80, y: 25, rotate: -6, scale: 1.6 },
+        { id: 2, src: section3Story2, alt: "Dessin 2", x: 92, y: 70, rotate: 8, scale: 2 },
+        { id: 3, src: section3Story3, alt: "Dessin 3", x: 30, y: 120, rotate: -12, scale: 2.1 },
+        { id: 4, src: section3Story4, alt: "Dessin 4", x: 80, y: 140, rotate: 4, scale: 4 },
         { id: 5, src: section3Story5, alt: "Dessin 5", x: 70, y: 100, rotate: 14, scale: 1.4 },
         { id: 6, src: section3Story6, alt: "Dessin 6", x: 88, y: 130, rotate: -10, scale: 1.3 },
         { id: 7, src: section3Story7, alt: "Dessin 7", x: 60, y: 160, rotate: 6, scale: 2.4 },

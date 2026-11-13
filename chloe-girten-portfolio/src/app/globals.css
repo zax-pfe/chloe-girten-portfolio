@@ -25,6 +25,7 @@
   --font-contact-text: normal 400 14px/120% Helvetica, Arial, sans-serif;
   --font-piece-name: normal 400 72px/normal Helvetica, Arial, sans-serif;
   --font-piece-text: normal 400 14px/normal Helvetica, Arial, sans-serif;
+  --font-story-text: normal 500 40px/normal var(--font-raleway), sans-serif;
 
   /* Border radius */
   --radius-navbar: 35px;
