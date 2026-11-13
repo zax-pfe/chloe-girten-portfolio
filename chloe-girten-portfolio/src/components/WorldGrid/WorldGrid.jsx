@@ -1,4 +1,5 @@
-import Image from "next/image";
+// Loads straight from the Sanity image CDN at the size next/image asks for.
+import { Image } from "next-sanity/image";
 import styles from "./style.module.scss";
 
 export default function WorldGrid({ items }) {
@@ -34,7 +35,7 @@ function PhotoCropItem({ src, alt }) {
   return (
     <div className={styles.worldItem}>
       <div className={styles.cropContainer}>
-        <Image src={src} alt={alt} className={styles.media} fill sizes="10vw" />
+        <Image src={src} alt={alt ?? ""} className={styles.media} fill sizes="10vw" />
       </div>
     </div>
   );
@@ -43,7 +44,7 @@ function PhotoCropItem({ src, alt }) {
 function PhotoFullItem({ src, alt }) {
   return (
     <div className={styles.worldItem}>
-      <Image src={src} alt={alt} className={styles.media} fill sizes="20vw" />
+      <Image src={src} alt={alt ?? ""} className={styles.media} fill sizes="20vw" />
     </div>
   );
 }

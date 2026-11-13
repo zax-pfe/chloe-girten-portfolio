@@ -22,6 +22,7 @@ export default defineConfig({
       defineSingleton({documentId: 'about', schemaType: 'about'}),
       defineSingleton({documentId: 'world', schemaType: 'world'}),
       defineSingleton({documentId: 'floatingPieces', schemaType: 'floatingPieces'}),
+      defineSingleton({documentId: 'drawingStory', schemaType: 'drawingStory'}),
     ],
   },
 })

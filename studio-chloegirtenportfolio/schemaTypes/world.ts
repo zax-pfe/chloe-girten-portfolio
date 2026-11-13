@@ -7,6 +7,11 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 
 const CELLS_PER_ROW = 5
 
+// Shown on the cell types and on their image field, so the size is visible when importing.
+// Sizes: a cell is about 1/6 of the screen width, doubled for retina screens.
+const CROP_SIZE_INFO = 'Proportion : 4/5. Taille : au moins 500 × 625 px'
+const FULL_SIZE_INFO = 'Proportion : 1/1. Taille : au moins 1000 × 1000 px'
+
 const altField = defineField({
   name: 'alt',
   title: 'Texte alternatif',
@@ -45,14 +50,15 @@ export const world = defineType({
         }),
         defineArrayMember({
           name: 'photoCropCell',
-          title: 'Photo recadrée',
-          description: "Petite image au centre de la case.",
+          title: 'Photo crop',
+          description: `Petite image au centre de la case. ${CROP_SIZE_INFO}`,
           type: 'object',
           icon: ImageIcon,
           fields: [
             defineField({
               name: 'image',
               title: 'Image',
+              description: CROP_SIZE_INFO,
               type: 'image',
               options: {hotspot: true},
               fields: [altField],
@@ -61,19 +67,20 @@ export const world = defineType({
           ],
           preview: {
             select: {media: 'image', subtitle: 'image.alt'},
-            prepare: ({media, subtitle}) => ({title: 'Photo recadrée', subtitle, media}),
+            prepare: ({media, subtitle}) => ({title: 'Photo crop', subtitle, media}),
           },
         }),
         defineArrayMember({
           name: 'photoFullCell',
-          title: 'Photo pleine case',
-          description: 'Image qui remplit toute la case.',
+          title: 'Photo full',
+          description: `Image qui remplit toute la case. ${FULL_SIZE_INFO}`,
           type: 'object',
           icon: ImageIcon,
           fields: [
             defineField({
               name: 'image',
               title: 'Image',
+              description: FULL_SIZE_INFO,
               type: 'image',
               options: {hotspot: true},
               fields: [altField],
@@ -82,7 +89,7 @@ export const world = defineType({
           ],
           preview: {
             select: {media: 'image', subtitle: 'image.alt'},
-            prepare: ({media, subtitle}) => ({title: 'Photo pleine case', subtitle, media}),
+            prepare: ({media, subtitle}) => ({title: 'Photo full', subtitle, media}),
           },
         }),
         defineArrayMember({

@@ -25,6 +25,32 @@ export const DRAWINGS_QUERY = defineQuery(`
   }
 `);
 
+// Singleton with a fixed id: texts of the Story mode, the drawings stay in drawingStoryData.
+export const DRAWING_STORY_QUERY = defineQuery(`
+  *[_id == "drawingStory"][0] {
+    section1Text,
+    section3Text
+  }
+`);
+
+// Singleton with a fixed id: the grid cells, read row by row (5 per row).
+// "type" keeps the names used by WorldGrid; "src" is the image or the video url.
+export const WORLD_QUERY = defineQuery(`
+  *[_id == "world"][0].cells[] {
+    "id": _key,
+    "type": select(
+      _type == "photoCropCell" => "photoCrop",
+      _type == "photoFullCell" => "photoFull",
+      _type == "textCell" => "text",
+      _type == "videoCell" => "video",
+      "empty"
+    ),
+    "src": coalesce(image.asset->url, video.asset->url),
+    "alt": image.alt,
+    text
+  }
+`);
+
 // Singleton with a fixed id. The text has no styles or marks in the studio,
 // so each block is flattened to a plain string, one per paragraph.
 export const ABOUT_QUERY = defineQuery(`

@@ -46,6 +46,8 @@ function FloatingImage({
 
   const { image, title } = floatingImgData.find((piece) => piece.id === id);
   const aspect = image.width / image.height;
+  // Largest width the image is shown at: selected, contained in the TARGET_SIZE box.
+  const selectedSizes = `min(${TARGET_SIZE[0] * 100}vw, ${Math.round(TARGET_SIZE[1] * 100 * aspect)}vh)`;
 
   const imageRef = useRef(null);
   const returningRef = useRef(false);
@@ -137,7 +139,7 @@ function FloatingImage({
         src={image}
         alt={title}
         fill
-        sizes={`${TARGET_SIZE[0] * 100}vw`}
+        sizes={selectedSizes}
         draggable={false}
         className={styles.img}
       />

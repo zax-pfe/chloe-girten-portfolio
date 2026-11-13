@@ -7,7 +7,7 @@ import { drawingStoryData } from "@/data/drawingStoryData";
 import styles from "./style.module.scss";
 
 // Drawings placed freely over the whole parent (absolute layer), every value comes from
-// drawingStoryData. The panel scrolls natively (smoothed by the PageWrapper's Lenis).
+// drawingStoryData. The texts come from Sanity (drawingStory document). The panel scrolls natively (smoothed by the PageWrapper's Lenis).
 function Drawings({ section }) {
   return (
     <div className={styles.drawings}>
@@ -89,29 +89,29 @@ function Section2({ section }) {
 }
 
 // A text on the left at the top, over drawings placed like in section1 (same top reference).
-function Section3({ section }) {
+function Section3({ section, text }) {
   return (
     <section className={styles.section3} style={{ height: `${section.height}cqh` }}>
       <Drawings section={section} />
-      <p className={styles.text}>{section.text}</p>
+      <p className={styles.text}>{text}</p>
     </section>
   );
 }
 
-export default function DrawingStory() {
-  const { text, sections } = drawingStoryData;
+export default function DrawingStory({ texts }) {
+  const { sections } = drawingStoryData;
 
   return (
     <div className={styles.drawingStory}>
       {sections.map((section) => {
         if (section.id === "section1") {
-          return <Section1 key={section.id} section={section} text={text} />;
+          return <Section1 key={section.id} section={section} text={texts?.section1Text} />;
         }
         if (section.id === "section2") {
           return <Section2 key={section.id} section={section} />;
         }
         if (section.id === "section3") {
-          return <Section3 key={section.id} section={section} />;
+          return <Section3 key={section.id} section={section} text={texts?.section3Text} />;
         }
         return null;
       })}

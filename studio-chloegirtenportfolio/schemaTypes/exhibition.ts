@@ -33,6 +33,7 @@ export const exhibition = defineType({
     defineField({
       name: 'image',
       title: 'Image principale',
+      description: 'Proportion : 16/9',
       type: 'image',
       options: {
         hotspot: true,
@@ -42,7 +43,7 @@ export const exhibition = defineType({
     defineField({
       name: 'gallery',
       title: 'Autres images',
-      description: "Pas de limite. Glisser-déposer pour changer l'ordre.",
+      description: "Proportion : 16/9. Pas de limite. Glisser-déposer pour changer l'ordre.",
       type: 'array',
       of: [
         defineArrayMember({

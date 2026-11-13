@@ -11,6 +11,7 @@ export const about = defineType({
     defineField({
       name: 'image',
       title: 'Image',
+      description: 'Proportion : 3/4',
       type: 'image',
       options: {
         hotspot: true,

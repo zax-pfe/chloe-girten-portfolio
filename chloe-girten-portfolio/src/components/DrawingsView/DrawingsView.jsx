@@ -10,7 +10,7 @@ const MODES = {
   GRID: "grid",
 };
 
-export default function DrawingsView({ items }) {
+export default function DrawingsView({ items, story }) {
   const [mode, setMode] = useState(MODES.GRID);
 
   return (
@@ -35,7 +35,7 @@ export default function DrawingsView({ items }) {
         </button>
       </div>
 
-      {mode === MODES.GRID ? <DrawingGrid items={items} /> : <DrawingStory />}
+      {mode === MODES.GRID ? <DrawingGrid items={items} /> : <DrawingStory texts={story} />}
     </>
   );
 }

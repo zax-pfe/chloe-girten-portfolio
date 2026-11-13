@@ -10,6 +10,7 @@ export const piece = defineType({
     defineField({
       name: 'image',
       title: 'Image',
+      description: 'Proportion : 3/4',
       type: 'image',
       options: {
         hotspot: true,
@@ -20,7 +21,7 @@ export const piece = defineType({
       name: 'imageNoBg',
       title: 'Image détourée',
       description:
-        "Même image sans fond (PNG transparent), aux mêmes dimensions que l'image. Affichée par défaut, le fond apparaît au survol. Aussi utilisée dans le fond animé : importer en haute résolution.",
+        "Même image sans fond (PNG transparent), aux mêmes dimensions que l'image. Affichée par défaut, le fond apparaît au hover.",
       type: 'image',
       validation: (rule) => rule.required(),
     }),

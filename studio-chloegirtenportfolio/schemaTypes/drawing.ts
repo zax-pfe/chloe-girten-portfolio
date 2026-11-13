@@ -10,6 +10,7 @@ export const drawing = defineType({
     defineField({
       name: 'image',
       title: 'Image',
+      description: 'Proportion : 3/4',
       type: 'image',
       options: {
         hotspot: true,
@@ -18,8 +19,9 @@ export const drawing = defineType({
     }),
     defineField({
       name: 'imageHover',
-      title: 'Image au survol',
-      description: 'Optionnelle. Affichée à la place du dessin quand la souris passe dessus.',
+      title: 'Image au hover',
+      description:
+        'Optionnelle. Affichée à la place du dessin au hover. Proportion : 3/4',
       type: 'image',
     }),
     defineField({
