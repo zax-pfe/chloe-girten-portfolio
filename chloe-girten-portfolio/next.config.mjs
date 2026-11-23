@@ -10,6 +10,9 @@ const nextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  experimental: {
+    agentUpgrade: "security",
+  },
 };
 
 export default nextConfig;
