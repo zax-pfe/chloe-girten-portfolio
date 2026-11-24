@@ -7,8 +7,10 @@ import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { usePieceTransitionStore } from "@/store/store";
 import {
+  createGhost,
   FADE_DURATION,
   FADE_EASE,
+  fadeOutGhost,
   Flip,
   getPanel,
   PANEL_DURATION,
@@ -42,8 +44,8 @@ export default function PieceDetail({ piece }) {
   const sharpRef = useRef(null);
   const titleRef = useRef(null);
   const moreRef = useRef(null);
-  // Flip state taken from the store on the first run. Kept here because React runs the effect
-  // twice in development (Strict Mode), and the second run must flip too.
+  // Flip state (and grid copy) taken from the store on the first run. Kept here because React
+  // runs the effect twice in development (Strict Mode), and the second run must flip too.
   const flipRef = useRef(undefined);
 
   // Opening, before paint. The title and the rest are hidden in CSS until revealed here.
@@ -53,22 +55,28 @@ export default function PieceDetail({ piece }) {
     if (flipRef.current === undefined) {
       const { flipState, setFlipState } = usePieceTransitionStore.getState();
       // Only the state of this piece's grid item: another one, left over, is ignored.
-      flipRef.current = flipState?.id === piece.id ? flipState.state : null;
+      flipRef.current = flipState?.id === piece.id ? flipState : null;
       setFlipState(null);
     }
     const flip = flipRef.current;
 
     const context = gsap.context(() => {
       if (flip) {
-        // From the grid item to the top of the panel, with the panel shrinking to portrait.
+        // From the grid item to the top of the panel, with the panel turning into a tall
+        // portrait that goes up to the top of the screen.
         // Resizing instead of scaling: the image is cropped (cover) at every step instead of
         // stretched, and the panel keeps its border and radius.
-        Flip.from(flip, {
+        Flip.from(flip.state, {
           targets: [hero, getPanel(hero)],
           scale: false,
+          // The image is inside the panel, which moves too: its own move is measured from the
+          // panel's, so the two don't add up.
+          nested: true,
           duration: motionDuration(PANEL_DURATION),
           ease: PANEL_EASE,
         });
+        // At the same time, the copy of the grid (the other items) fades out, then goes away.
+        if (flip.ghost) fadeOutGhost(flip.ghost);
         gsap.to(reveal, {
           autoAlpha: 1,
           duration: motionDuration(FADE_DURATION),
@@ -76,7 +84,8 @@ export default function PieceDetail({ piece }) {
           delay: motionDuration(PANEL_DURATION),
         });
       } else {
-        // Reached another way (link, back/forward): everything fades in while the panel resizes.
+        // Reached another way (link, back/forward): everything fades in. When the panel has to
+        // resize first, Inner keeps the whole page hidden until it's done.
         gsap.fromTo(
           [hero, ...reveal],
           { autoAlpha: 0 },
@@ -87,16 +96,13 @@ export default function PieceDetail({ piece }) {
     return () => context.revert();
   }, [piece.id]);
 
-  // Closing (close zones, Escape): the page fades out, then the grid comes back (see Inner).
+  // Closing (close zones, Escape): back to the grid straight away. A copy of this page stays
+  // in the panel and fades out while the panel goes back to its size; the grid fades in after
+  // (see Inner).
   useEffect(() => {
     if (!isClosing) return;
-    const tween = gsap.to(rootRef.current, {
-      autoAlpha: 0,
-      duration: motionDuration(FADE_DURATION),
-      ease: FADE_EASE,
-      onComplete: () => router.push("/pieces"),
-    });
-    return () => tween.kill();
+    createGhost(rootRef.current);
+    router.push("/pieces");
   }, [isClosing, router]);
 
   useEffect(() => endClose, [endClose]);

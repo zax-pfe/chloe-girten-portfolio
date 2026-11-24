@@ -1,9 +1,9 @@
 .modalContainer {
   position: relative;
   z-index: 0;
-  // Three grid columns right after the navbar, at the bottom of the row.
+  // Three grid columns right after the navbar, at the bottom of the content row.
   grid-column: 1 / span 3;
-  grid-row: 1;
+  grid-row: content;
   align-self: end;
   // Grows if a long name wraps on a narrow screen.
   min-height: 160px;

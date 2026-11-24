@@ -13,25 +13,33 @@
     pointer-events: none;
 
     .botPageContainer {
-      // Below the title band.
-      margin-top: var(--header-height);
-      padding: 0px var(--grid-margin) 20px var(--grid-margin);
+      // The whole screen, in two rows: the title band (the title itself is drawn behind it, see
+      // Title), then the content. The navbar and the panels sit in the content row; the panel of
+      // a piece page also takes the band, up to the top of the screen (see Inner).
+      padding: var(--grid-margin-y) var(--grid-margin);
       width: 100%;
-      height: calc(100vh - var(--header-height));
+      height: 100vh;
       display: grid;
       grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
-      // minmax(0, …) keeps the row at the container height instead of growing with the content.
-      grid-template-rows: minmax(0, 1fr);
+      // The band ends at --header-height from the top of the screen.
+      // minmax(0, …) keeps the content row at the container height instead of growing with the content.
+      grid-template-rows:
+        [title-start] calc(var(--header-height) - var(--grid-margin-y))
+        [title-end content-start] minmax(0, 1fr)
+        [content-end];
       column-gap: var(--grid-gutter);
 
       .main {
         z-index: 1;
         position: relative;
-        // Takes every column after the navbar and shares them with its children.
+        // Takes every column after the navbar and both rows, and shares them with its children.
+        // Like .content, it lets the pointer through outside the panels: the title band stays
+        // clickable (close zone).
         grid-column: 2 / -1;
+        grid-row: title-start / content-end;
         display: grid;
         grid-template-columns: subgrid;
-        grid-template-rows: minmax(0, 1fr);
+        grid-template-rows: subgrid;
         min-width: 0;
         min-height: 0;
       }

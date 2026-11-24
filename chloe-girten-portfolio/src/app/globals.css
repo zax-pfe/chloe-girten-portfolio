@@ -9,6 +9,8 @@
   /* Layout grid */
   --grid-columns: 8;
   --grid-margin: 22px;
+  /* Space at the top and bottom of the screen: under the navbar and the panels, above the panel of a piece page. */
+  --grid-margin-y: 20px;
   --grid-gutter: 10px;
   /* Width of one column, to align elements nested in other containers. */
   --grid-col: calc(

@@ -1,7 +1,8 @@
 .navBarContainer {
   display: flex;
-  // One grid column.
+  // One grid column, in the content row under the title band (see Layout).
   grid-column: span 1;
+  grid-row: content;
   min-width: 0;
   padding: 10px;
   flex-direction: column;

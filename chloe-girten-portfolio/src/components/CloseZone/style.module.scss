@@ -33,7 +33,8 @@
   );
 }
 
-// Right of the portrait panel of a piece page.
+// Right of the panel of a piece page, which goes up to the top of the screen: from the top too.
 .side.pieceSide {
   --side-columns: var(--panel-piece-columns);
+  top: 0;
 }

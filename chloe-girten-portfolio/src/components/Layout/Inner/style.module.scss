@@ -9,13 +9,24 @@
   min-height: 0;
 }
 
+// Copy of the page being left, fading out between the grid and a piece (see createGhost).
+// Under the page (negative z-index in the panel's stacking context), so the flipping image
+// passes over it.
+.ghostLayer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .panel {
   border-radius: var(--radius-panel);
   border: 1px solid #000;
   background: #fffbf6;
-  // Same cell as the modal, drawn above it.
+  // Same cell as the modal (content row, under the title band), drawn above it.
   grid-column: 1 / -1;
-  grid-row: 1;
+  grid-row: content;
 
   pointer-events: auto;
   overflow: hidden;
@@ -27,7 +38,9 @@
 }
 
 .panel.piece {
-  // Portrait panel of a piece page, right after the navbar.
-  // Its width is animated by Inner when coming from or going back to the grid.
+  // Tall portrait panel of a piece page, right after the navbar: it also takes the title band,
+  // from --grid-margin-y under the top of the screen to the bottom.
+  // Its size and position are animated when coming from or going back to the grid.
   grid-column: 1 / span var(--panel-piece-columns);
+  grid-row: title-start / content-end;
 }

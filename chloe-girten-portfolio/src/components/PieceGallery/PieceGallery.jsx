@@ -5,9 +5,8 @@ import { Image } from "next-sanity/image";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { gsap } from "gsap";
 import { useCursorStore, usePieceTransitionStore } from "@/store/store";
-import { FADE_DURATION, FADE_EASE, Flip, getPanel, motionDuration, pieceFlipId } from "../PieceDetail/transition";
+import { createGhost, Flip, getPanel, pieceFlipId } from "../PieceDetail/transition";
 import styles from "./style.module.scss";
 
 const backgroundVariants = {
@@ -23,36 +22,28 @@ export default function PieceGallery({ items }) {
   const setFlipState = usePieceTransitionStore((state) => state.setFlipState);
 
   const galleryRef = useRef(null);
-  // Fade of the other items, until the piece page opens.
-  const openingRef = useRef(null);
+  // A piece is opening: further clicks are ignored until the page changes.
+  const openingRef = useRef(false);
 
   // Leaving the page while hovering a piece would keep the cursor follower visible.
   useEffect(() => () => clearHovered("piece"), [clearHovered]);
 
-  useEffect(() => {
-    // A Flip state left by an opening that didn't finish must not play on a later visit.
-    setFlipState(null);
-    return () => openingRef.current?.kill();
-  }, [setFlipState]);
+  // Left by an opening that didn't finish: must not play on a later visit.
+  useEffect(() => setFlipState(null), [setFlipState]);
 
-  // The other items fade out, then the piece page opens and flips the clicked one into place.
+  // Opens the piece page, which flips the clicked item into place (see PieceDetail).
+  // The grid is replaced as soon as the page changes: a copy of it stays in the panel,
+  // for the other items to fade out while the image and the panel move.
   const openPiece = (id, element) => {
     if (openingRef.current) return;
-    const others = [...galleryRef.current.children].filter((child) => child !== element);
-    const open = () => {
-      // Measured last, right before the page changes. The panel too: it resizes with the image.
-      setFlipState({ id, state: Flip.getState([element, getPanel(element)]) });
-      router.push(pieceHref(id));
-    };
-    // A single piece: nothing to fade, it opens straight away.
-    openingRef.current = others.length
-      ? gsap.to(others, {
-          autoAlpha: 0,
-          duration: motionDuration(FADE_DURATION),
-          ease: FADE_EASE,
-          onComplete: open,
-        })
-      : gsap.delayedCall(0, open);
+    openingRef.current = true;
+    setFlipState({
+      id,
+      // The panel too: it resizes with the image.
+      state: Flip.getState([element, getPanel(element)]),
+      ghost: createGhost(galleryRef.current, element),
+    });
+    router.push(pieceHref(id));
   };
 
   return (
