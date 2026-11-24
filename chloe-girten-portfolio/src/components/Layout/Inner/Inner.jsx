@@ -7,11 +7,12 @@ import {
   FADE_DURATION,
   FADE_EASE,
   Flip,
-  PANEL_DURATION,
-  PANEL_EASE,
   PANEL_FLIP_ID,
+  RESIZE_DURATION,
+  RESIZE_EASE,
   fadeOutGhost,
   motionDuration,
+  playOnNextTick,
 } from "../../PieceDetail/transition";
 import styles from "./style.module.scss";
 
@@ -58,10 +59,10 @@ export default function Inner({ children, withPanel = true }) {
   const modeRef = useRef(panelMode);
   // State of the panel before the page changed (see PanelSnapshot), used once.
   const snapshotRef = useRef(null);
-  // The panel animation run here, stopped by the next one.
-  const flipRef = useRef(null);
+  // The transition run here (panel, copy of the old page, new page), stopped by the next one.
+  const timelineRef = useRef(null);
 
-  useEffect(() => () => flipRef.current?.kill(), []);
+  useEffect(() => () => timelineRef.current?.kill(), []);
 
   // Runs before paint, once the new page is in place: the panel already has its new size and
   // position, it is set back to the previous ones and animated to the new ones.
@@ -73,39 +74,35 @@ export default function Inner({ children, withPanel = true }) {
     if (!isPieceSwitch(previous, panelMode)) return;
 
     const panel = panelRef.current;
-    flipRef.current?.kill();
+    timelineRef.current?.kill();
     // A piece opened from the grid: its page (run first, being a child) already flips the panel
     // along with the image, and shows its own content.
     if (gsap.getTweensOf(panel).length) return;
 
     // Leftovers of an interrupted animation must not be measured as the new state.
     gsap.set(panel, { clearProps: "all" });
-    if (snapshot) {
-      // Resizing instead of scaling keeps the border and the radius as they are.
-      flipRef.current = Flip.from(snapshot, {
-        targets: panel,
-        scale: false,
-        duration: motionDuration(PANEL_DURATION),
-        ease: PANEL_EASE,
-      });
-    }
-
-    // While the panel moves, the copy of the page being left (see createGhost) fades out.
-    // The new page stays hidden until the panel has its final size, so it is never seen
-    // reflowing, then fades in.
+    const resizeDuration = snapshot ? motionDuration(RESIZE_DURATION) : 0;
     const ghostLayer = ghostLayerRef.current;
     const page = [...panel.children].filter((child) => child !== ghostLayer);
-    gsap.fromTo(
+
+    // Every starting state is applied now, before paint; the movement starts on the next tick.
+    const timeline = gsap.timeline({ paused: true });
+    if (snapshot) {
+      // Resizing instead of scaling keeps the border and the radius as they are.
+      timeline.add(Flip.from(snapshot, { targets: panel, scale: false, duration: resizeDuration, ease: RESIZE_EASE }), 0);
+    }
+    // While the panel moves, the copy of the page being left (see createGhost) fades out.
+    [...ghostLayer.children].forEach((ghost) => timeline.add(fadeOutGhost(ghost), 0));
+    // The new page stays hidden until the panel is in place, so it is never seen reflowing,
+    // then fades in. With the "out" ease, the panel has done 99% of its move at 80% of the
+    // duration: the page starts fading in there instead of waiting for the last pixel.
+    timeline.fromTo(
       page,
       { autoAlpha: 0 },
-      {
-        autoAlpha: 1,
-        duration: motionDuration(FADE_DURATION),
-        ease: FADE_EASE,
-        delay: snapshot ? motionDuration(PANEL_DURATION) : 0,
-      },
+      { autoAlpha: 1, duration: motionDuration(FADE_DURATION), ease: FADE_EASE },
+      resizeDuration * 0.8,
     );
-    [...ghostLayer.children].forEach(fadeOutGhost);
+    timelineRef.current = playOnNextTick(timeline);
   }, [panelMode]);
 
   return (

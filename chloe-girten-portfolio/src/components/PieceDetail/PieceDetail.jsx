@@ -107,6 +107,11 @@ export default function PieceDetail({ piece }) {
 
   useEffect(() => endClose, [endClose]);
 
+  // The grid is ready by the time the page is closed: it changes right away on click.
+  useEffect(() => {
+    router.prefetch("/pieces");
+  }, [router]);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") requestClose();

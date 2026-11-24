@@ -5,12 +5,17 @@ gsap.registerPlugin(Flip);
 
 export { Flip };
 
-// Grid <-> piece page. The panel resize and the image Flip share the same duration and ease:
-// the image's edges then follow the panel's and never get clipped.
-export const PANEL_DURATION = 1;
+// Grid -> piece page: the image flips from its grid item while the panel resizes, slow enough
+// to follow the image with the eye. Same duration and ease for both: the image's edges then
+// follow the panel's and never get clipped.
+export const PANEL_DURATION = 0.8;
 export const PANEL_EASE = "power3.inOut";
+// The panel moving alone (back to the grid, back/forward, navbar): there is nothing to follow
+// with the eye, so it's shorter, starting fast and settling into place.
+export const RESIZE_DURATION = 0.8;
+export const RESIZE_EASE = "power3.out";
 // Content swaps: the other grid items before opening, the piece page before closing, the grid after.
-export const FADE_DURATION = 0.3;
+export const FADE_DURATION = 0.4;
 export const FADE_EASE = "power1.inOut";
 
 // Ties a grid item to the piece page's image, for Flip.
@@ -72,6 +77,17 @@ export function fadeOutGhost(ghost) {
     ease: FADE_EASE,
     onComplete: () => ghost.remove(),
   });
+}
+
+// GSAP's clock only moves on its ticks (one per frame). An animation created at the end of a
+// long task, like React putting a new page in place, starts from a late clock and counts that
+// task as already played: it starts with a jump. Created paused (its starting state already
+// applied), it is started on the next tick instead, from its first frame.
+export function playOnNextTick(animation) {
+  const listener = gsap.ticker.add(() => animation.play(), true);
+  // Killed before that tick: it must not be started.
+  animation.eventCallback("onInterrupt", () => gsap.ticker.remove(listener));
+  return animation;
 }
 
 // No movement when the user asks for reduced motion.
