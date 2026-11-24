@@ -5,18 +5,13 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { usePieceStore } from "@/store/store";
 import { floatingImgData } from "@/data/floatingImgData";
+import { addDebugFolder } from "@/utils/debug";
 import { images_config } from "./imageList";
+import { stepMotion } from "./motion/engine";
+import { setupMotionDebug } from "./motion/debugPanel";
 import styles from "./style.module.scss";
 
-function mod(n, m) {
-  return ((n % m) + m) % m;
-}
-
-const CONFIG = {
-  GLOBAL_SPEED: 3,
-  // Slight rotation sway while floating, in degrees.
-  ROTATION_AMPLITUDE: 4,
-};
+// The way pieces move is picked and tuned in ./motion (motionConfig.js, or live with #debug).
 
 // Ratio of the viewport, from its center.
 const TARGET_POSITION = [0.2, 0];
@@ -28,19 +23,8 @@ const RESUME_DURATION = 0.8;
 const SLOWDOWN_DURATION = 1.2;
 const IMAGE_CONFIGS = images_config;
 
-function FloatingImage({
-  id,
-  index,
-  elementRef,
-  height,
-  rotation,
-  direction,
-  speed,
-  amplitude,
-  frequency,
-  phase,
-  onSelect,
-}) {
+function FloatingImage({ config, index, elementRef, onSelect }) {
+  const { id, height, rotation } = config;
   const isSelected = usePieceStore((state) => state.isModalOpen && state.selectedPiece?.id === id);
   const clearPiece = usePieceStore((state) => state.clearPiece);
 
@@ -54,6 +38,8 @@ function FloatingImage({
   const originalTransform = useRef(null);
   // Position on the stage, float time and speed factor, read by the shared ticker.
   const motionRef = useRef({ x: 0, y: 0, rotation, time: 0, speed: 1, selected: false });
+  // Read by the motion engine (./motion/engine.js); sizes are measured by the stage.
+  const itemRef = useRef(null);
 
   useEffect(() => {
     const element = imageRef.current;
@@ -119,17 +105,9 @@ function FloatingImage({
       style={{ height: `${height}vh`, aspectRatio: aspect }}
       ref={(element) => {
         imageRef.current = element;
-        elementRef.current[index] = element && {
-          element,
-          motion: motionRef.current,
-          bounds: { width: 0, height: 0 },
-          rotation,
-          angle: (direction * Math.PI) / 180,
-          speed,
-          amplitude,
-          frequency,
-          phase,
-        };
+        itemRef.current ??= { motion: motionRef.current, config, index, bounds: { width: 0, height: 0 }, radius: 0 };
+        itemRef.current.element = element;
+        elementRef.current[index] = element && itemRef.current;
       }}
       onClick={() => {
         if (!returningRef.current) onSelect(id);
@@ -175,11 +153,14 @@ export default function FloatingImages() {
       // so it reappears as soon as it has fully left the screen.
       elementRef.current.forEach((item) => {
         if (!item) return;
-        const diagonal = Math.hypot(item.element.offsetWidth, item.element.offsetHeight);
+        const { offsetWidth, offsetHeight } = item.element;
+        const diagonal = Math.hypot(offsetWidth, offsetHeight);
         item.bounds = {
           width: stageDimensions.current.width + diagonal,
           height: stageDimensions.current.height + diagonal,
         };
+        // Size used to keep pieces apart.
+        item.radius = (offsetWidth + offsetHeight) / 4;
       });
     };
     measure();
@@ -189,15 +170,11 @@ export default function FloatingImages() {
       if (!item) return;
       item.motion.x = basePosition[0] * item.bounds.width;
       item.motion.y = basePosition[1] * item.bounds.height;
-      gsap.set(item.element, {
-        xPercent: -50,
-        yPercent: -50,
-        x: item.motion.x,
-        y: item.motion.y,
-        rotation: item.motion.rotation,
-        autoAlpha: 1,
-      });
+      gsap.set(item.element, { xPercent: -50, yPercent: -50 });
     });
+    // Places every piece with the active motion mode before showing it.
+    stepMotion(elementRef.current, 0, stageDimensions.current);
+    elementRef.current.forEach((item) => item && gsap.set(item.element, { autoAlpha: 1 }));
 
     const observer = new ResizeObserver(measure);
     observer.observe(stage);
@@ -224,48 +201,21 @@ export default function FloatingImages() {
 
   useEffect(() => {
     const tick = (_time, deltaTime) => {
-      const delta = (deltaTime / 1000) * globalMotion.current.speed;
-
-      elementRef.current.forEach((item) => {
-        if (!item || item.motion.selected) return;
-
-        const { element, motion, bounds, rotation, angle, speed: imageSpeed, amplitude, frequency, phase } = item;
-        // Advance from the current position so floating resumes smoothly after deselection.
-        const distance = delta * imageSpeed * CONFIG.GLOBAL_SPEED * motion.speed;
-        const previousTime = motion.time;
-        motion.time += delta * motion.speed;
-        const angularFrequency = frequency * Math.PI * 2;
-        // Independent waves on each axis, paused during selection and resumed smoothly.
-        const wobbleX =
-          amplitude *
-          (Math.sin(motion.time * angularFrequency + phase[0]) - Math.sin(previousTime * angularFrequency + phase[0]));
-        const wobbleY =
-          amplitude *
-          (Math.sin(motion.time * angularFrequency * 0.83 + phase[1]) -
-            Math.sin(previousTime * angularFrequency * 0.83 + phase[1]));
-        const offsetX = Math.cos(angle) * distance + wobbleX;
-        const offsetY = Math.sin(angle) * distance + wobbleY;
-
-        motion.x = mod(motion.x + offsetX + bounds.width / 2, bounds.width) - bounds.width / 2;
-        motion.y = mod(motion.y + offsetY + bounds.height / 2, bounds.height) - bounds.height / 2;
-        // Sway around the base rotation, starting from it at time 0.
-        motion.rotation =
-          rotation +
-          CONFIG.ROTATION_AMPLITUDE *
-            (Math.sin(motion.time * angularFrequency * 0.6 + phase[0]) - Math.sin(phase[0]));
-
-        gsap.set(element, { x: motion.x, y: motion.y, rotation: motion.rotation });
-      });
+      stepMotion(elementRef.current, (deltaTime / 1000) * globalMotion.current.speed, stageDimensions.current);
     };
 
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);
   }, []);
 
+  // ______________________ DEBUG PANEL (#debug) ______________________//
+
+  useEffect(() => addDebugFolder((gui) => setupMotionDebug(gui, stageRef.current)), []);
+
   return (
     <div className={styles.stage} ref={stageRef}>
       {IMAGE_CONFIGS.map((image, index) => (
-        <FloatingImage key={image.id} {...image} index={index} elementRef={elementRef} onSelect={handleSelect} />
+        <FloatingImage key={image.id} config={image} index={index} elementRef={elementRef} onSelect={handleSelect} />
       ))}
     </div>
   );
