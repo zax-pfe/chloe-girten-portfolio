@@ -13,6 +13,19 @@ export const PIECES_QUERY = defineQuery(`
   }
 `);
 
+// One piece, for its page (/pieces/[id]). The image size lets the page show it at its own ratio.
+export const PIECE_QUERY = defineQuery(`
+  *[_type == "piece" && _id == $id && defined(image.asset)][0] {
+    "id": _id,
+    title,
+    date,
+    description,
+    "url": image.asset->url,
+    "width": image.asset->metadata.dimensions.width,
+    "height": image.asset->metadata.dimensions.height
+  }
+`);
+
 // Drawings without an image are skipped. The hover image is optional:
 // "hover" is null when there is none, and the grid then shows no swap.
 // Ordered by drag and drop in the studio (orderRank); drawings not ordered yet fall back to the date.

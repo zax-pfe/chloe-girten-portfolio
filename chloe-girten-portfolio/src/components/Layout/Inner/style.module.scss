@@ -25,3 +25,9 @@
   // A few grid columns, right after the navbar.
   grid-column: 1 / span var(--panel-compact-columns);
 }
+
+.panel.piece {
+  // Portrait panel of a piece page, right after the navbar.
+  // Its width is animated by Inner when coming from or going back to the grid.
+  grid-column: 1 / span var(--panel-piece-columns);
+}

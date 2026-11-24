@@ -9,6 +9,17 @@ export const usePieceStore = create((set) => ({
   clearPiece: () => set({ selectedPiece: null }),
 }));
 
+// Hand-off between the pieces grid and a piece page (/pieces/[id]).
+export const usePieceTransitionStore = create((set) => ({
+  // { id, state }: Flip state of the clicked grid item, played by the piece page it opens.
+  flipState: null,
+  setFlipState: (flipState) => set({ flipState }),
+  // Set by the close zones and Escape: the piece page fades out, then goes back to the grid.
+  isClosing: false,
+  requestClose: () => set({ isClosing: true }),
+  endClose: () => set({ isClosing: false }),
+}));
+
 // Kind of element under the cursor ("piece"...), read by the cursor follower to pick its label or arrow.
 export const useCursorStore = create((set) => ({
   hovered: null,

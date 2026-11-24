@@ -16,6 +16,8 @@
   );
   /* Width in columns of the small panel (Contact); the close zone starts right after it. */
   --panel-compact-columns: 3;
+  /* Width in columns of the panel on a piece page (/pieces/[id]), portrait. */
+  --panel-piece-columns: 4;
 
   /* Fonts, used with `font: var(--font-…)`: style weight size/line-height family */
   --font-nav: normal 400 13px/120% var(--font-raleway), sans-serif;
