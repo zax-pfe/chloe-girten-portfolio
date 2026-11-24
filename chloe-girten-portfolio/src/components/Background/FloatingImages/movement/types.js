@@ -15,9 +15,10 @@
  * Motion traits of a piece, generated from the global seed (traits.js).
  * @typedef {object} PieceTraits
  * @property {[number, number]} basePosition Start position, ratio from the stage center (-0.5 to 0.5).
- * @property {number} rotation Base rotation, in degrees.
+ * @property {number} rotation Start rotation, in degrees.
+ * @property {number} spin Rotation direction: 1 clockwise, -1 counterclockwise.
  * @property {number} direction Drift direction, in degrees.
- * @property {number} amplitude Wobble size, in px.
+ * @property {number} amplitude Wobble size, in px, before the global amplitude.
  * @property {number} frequency Wobble speed, in Hz.
  * @property {[number, number]} phase Wobble offset on each axis, in radians.
  * @property {number} z Depth, 0 (far) to 1 (near).
@@ -35,6 +36,8 @@
  * @property {number} speed Speed of the piece, 1 = normal.
  * @property {number} scaleFloating Height while floating, ratio of the screen height.
  * @property {number} scaleOpen Size once opened, ratio of the screen.
+ * @property {number} rotationSpeed Rotation speed, in degrees per second.
+ * @property {number} amplitude Wobble size in px: traits.amplitude times the global amplitude.
  * @property {PieceTraits} traits
  * @property {number} activity 0 to 1, eased by the selection: multiply the piece's dt by it.
  * @property {boolean} held True while the piece is selected: leave its state untouched.

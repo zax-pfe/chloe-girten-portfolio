@@ -39,6 +39,7 @@ export function generateTraits(pieces, seed) {
     traits.basePosition[0] = ((cell % columns) + 0.2 + 0.6 * random()) / columns - 0.5;
     traits.basePosition[1] = (Math.floor(cell / columns) + 0.2 + 0.6 * random()) / rows - 0.5;
     traits.rotation = (random() * 2 - 1) * ROTATION_MAX;
+    traits.spin = random() < 0.5 ? -1 : 1;
     traits.direction = random() * 360;
     traits.amplitude = between(AMPLITUDE, random);
     traits.frequency = between(FREQUENCY, random);

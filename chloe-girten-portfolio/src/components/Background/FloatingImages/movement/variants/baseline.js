@@ -21,8 +21,8 @@ function measureWrap(bounds) {
 }
 
 /**
- * Reference: the original motion algorithm. Straight drift along `direction`, sine wobble
- * on each axis, and a modulo that brings pieces back on the opposite side.
+ * Reference, from the original motion algorithm: straight drift along `direction`, sine wobble
+ * on each axis, a modulo that brings pieces back on the opposite side, and a steady rotation.
  * Its traits (start, direction, wobble...) are generated from the seed (../traits.js).
  * @type {MovementStrategy}
  */
@@ -31,12 +31,9 @@ export const baseline = {
   defaults: {
     // Drift speed of a piece at speed 1, in px/s.
     driftSpeed: 55,
-    // Rotation sway while floating, in degrees.
-    rotationAmplitude: 4,
   },
   ranges: {
     driftSpeed: [0, 200, 1],
-    rotationAmplitude: [0, 20, 0.1],
   },
 
   init(nextPieces, bounds, nextParams) {
@@ -65,7 +62,8 @@ export const baseline = {
       const piece = pieces[i];
       if (piece.held) continue;
       const state = states[i];
-      const { direction, amplitude, frequency, phase, rotation } = piece.traits;
+      const { direction, frequency, phase, spin } = piece.traits;
+      const { amplitude } = piece;
 
       // Advance from the current position so floating resumes smoothly after a selection.
       const pieceDt = dt * piece.activity;
@@ -86,10 +84,8 @@ export const baseline = {
 
       state.x = wrap(state.x + Math.cos(angle) * distance + wobbleX, wrapWidths[i]);
       state.y = wrap(state.y + Math.sin(angle) * distance + wobbleY, wrapHeights[i]);
-      // Sway around the base rotation, starting from it at time 0.
-      state.rotation =
-        rotation +
-        params.rotationAmplitude * (Math.sin(time * angularFrequency * 0.6 + phase[0]) - Math.sin(phase[0]));
+      // Steady rotation, kept in [-180, 180[ so opening and closing never spin several turns.
+      state.rotation = wrap(state.rotation + pieceDt * piece.rotationSpeed * spin, 360);
     }
     return states;
   },

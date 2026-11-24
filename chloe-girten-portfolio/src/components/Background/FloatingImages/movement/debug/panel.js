@@ -34,6 +34,7 @@ export function createMovementPanel(runtime, stage) {
 
   const global = gui.addFolder("Global");
   global.add(settings, "speedMultiplier", 0, 5, 0.05);
+  global.add(settings, "amplitude", 0, 5, 0.05);
   global.add(settings, "paused");
   const seedController = global.add(settings, "seed", 1, 9999, 1).onFinishChange(() => runtime.reseed(settings.seed));
   global.add(
@@ -59,13 +60,16 @@ export function createMovementPanel(runtime, stage) {
     folder.add(values, "speed", 0, 3, 0.01);
     folder.add(values, "scaleFloating", 0.1, 1, 0.01);
     folder.add(values, "scaleOpen", 0.2, 1.5, 0.01);
+    folder.add(values, "rotationSpeed", 0, 45, 0.5);
   });
 
   // ______________________ PRESETS ______________________//
 
   const presets = gui.addFolder("Presets");
   presets.add(
-    { Copy: () => navigator.clipboard?.writeText(JSON.stringify(gui.save(), null, 2)) },
+    {
+      Copy: () => navigator.clipboard?.writeText(JSON.stringify(gui.save(), null, 2)),
+    },
     "Copy",
   );
   presets.add(

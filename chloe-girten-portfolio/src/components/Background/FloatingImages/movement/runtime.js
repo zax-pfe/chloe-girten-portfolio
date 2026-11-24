@@ -7,13 +7,25 @@ import { generateTraits } from "./traits";
 // Longest frame step: a hiccup (tab switch, GC) never makes pieces jump.
 const MAX_DT = 0.05;
 
-export const GLOBAL_DEFAULTS = { speedMultiplier: 1, paused: false, seed: 1, overlay: false };
+// amplitude: multiplies the wobble size of every piece (each keeps its own, generated from the seed).
+export const GLOBAL_DEFAULTS = {
+  speedMultiplier: 1,
+  amplitude: 1,
+  paused: false,
+  seed: 1,
+  overlay: false,
+};
 
 // Live settings, read every frame and edited by the debug panel. No React state: no re-render.
 export const settings = { variant: null, ...GLOBAL_DEFAULTS, fps: 0 };
 
 // Fallback when an entry of floatingImgData.js misses a value.
-export const PIECE_DEFAULTS = { speed: 1, scaleFloating: 0.4, scaleOpen: 1 };
+export const PIECE_DEFAULTS = {
+  speed: 1,
+  scaleFloating: 0.4,
+  scaleOpen: 1,
+  rotationSpeed: 4,
+};
 
 // Starting values of a piece: its entry in floatingImgData.js.
 export function getPieceDefaults(data) {
@@ -21,6 +33,7 @@ export function getPieceDefaults(data) {
     speed: data.speed ?? PIECE_DEFAULTS.speed,
     scaleFloating: data.scaleFloating ?? PIECE_DEFAULTS.scaleFloating,
     scaleOpen: data.scaleOpen ?? PIECE_DEFAULTS.scaleOpen,
+    rotationSpeed: data.rotationSpeed ?? PIECE_DEFAULTS.rotationSpeed,
   };
 }
 
@@ -41,13 +54,15 @@ export function getPieceLabel(data) {
   return `${data.id} · ${data.title}`;
 }
 
-// Copies the piece's live values onto it. Returns true when its floating size changed (it has to be resized).
+// Copies the piece's live values onto it, and resolves its wobble size with the global amplitude. Returns true when its floating size changed (it has to be resized).
 function resolvePieceSettings(piece) {
   const values = getPieceSettings(piece.data);
   const resized = piece.scaleFloating !== values.scaleFloating;
   piece.speed = values.speed;
   piece.scaleFloating = values.scaleFloating;
   piece.scaleOpen = values.scaleOpen;
+  piece.rotationSpeed = values.rotationSpeed;
+  piece.amplitude = piece.traits.amplitude * settings.amplitude;
   return resized;
 }
 
@@ -112,6 +127,13 @@ export function createMovementRuntime({ pieces, stage, timeScale }) {
   window.addEventListener("pointermove", onPointerMove);
   document.documentElement.addEventListener("pointerleave", onPointerLeave);
 
+  // Live values onto the pieces; resizes them when a floating size changed.
+  function resolveAll() {
+    let resized = false;
+    for (let i = 0; i < pieces.length; i++) resized = resolvePieceSettings(pieces[i]) || resized;
+    if (resized) runtime.measure();
+  }
+
   function render() {
     for (let i = 0; i < pieces.length; i++) {
       const piece = pieces[i];
@@ -173,6 +195,7 @@ export function createMovementRuntime({ pieces, stage, timeScale }) {
         opacity: gsap.quickSetter(element, "opacity"),
       }));
       generateTraits(pieces, settings.seed);
+      resolveAll();
       strategy.init(pieces, bounds, getVariantParams(key));
       states = strategy.update(0, time, pointer);
       render();
@@ -187,9 +210,7 @@ export function createMovementRuntime({ pieces, stage, timeScale }) {
     tick(delta) {
       if (!strategy) return;
       if (delta > 0) settings.fps += (1 / delta - settings.fps) * 0.05;
-      let resized = false;
-      for (let i = 0; i < pieces.length; i++) resized = resolvePieceSettings(pieces[i]) || resized;
-      if (resized) runtime.measure();
+      resolveAll();
       const frozen = settings.paused || reducedMotion.matches;
       const dt = frozen ? 0 : Math.min(delta, MAX_DT) * settings.speedMultiplier * timeScale.speed;
       time += dt;
@@ -223,7 +244,17 @@ export function createPiece(data, index) {
     ...getPieceDefaults(data),
     activity: 1,
     held: false,
-    traits: { basePosition: [0, 0], rotation: 0, direction: 0, amplitude: 0, frequency: 0, phase: [0, 0], z: 0.5 },
+    amplitude: 0,
+    traits: {
+      basePosition: [0, 0],
+      rotation: 0,
+      spin: 1,
+      direction: 0,
+      amplitude: 0,
+      frequency: 0,
+      phase: [0, 0],
+      z: 0.5,
+    },
     rendered: { x: 0, y: 0, rotation: 0, scale: 1, opacity: 1 },
   };
 }
