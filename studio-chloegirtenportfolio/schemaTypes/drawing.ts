@@ -1,4 +1,5 @@
 import {EditIcon} from '@sanity/icons/Edit'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {defineField, defineType} from 'sanity'
 
 export const drawing = defineType({
@@ -6,7 +7,10 @@ export const drawing = defineType({
   title: 'Drawings',
   type: 'document',
   icon: EditIcon,
+  // Order of the drawings in the grid, set by drag and drop in the "Drawings" list (see sanity.config.ts).
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({type: 'drawing'}),
     defineField({
       name: 'image',
       title: 'Image',

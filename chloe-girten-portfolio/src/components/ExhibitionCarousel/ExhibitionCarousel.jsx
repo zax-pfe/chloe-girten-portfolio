@@ -10,15 +10,15 @@ import styles from "./style.module.scss";
 const SLIDE_DURATION = 0.8;
 const SLIDE_EASE = "power3.inOut";
 
-// Puts each slide in its slot, in widths of the carousel: 0 is the visible one, -1 the next one
-// (on its left), 1, 2... the previous ones (on its right). Slots wrap around, so the strip never ends.
+// Puts each slide in its slot, in widths of the carousel: 0 is the visible one, 1, 2... the next ones
+// (on its right), -1 the previous one (on its left). Slots wrap around, so the strip never ends.
 function placeSlides(slides, offset) {
   const wrap = gsap.utils.wrap(-1, slides.length - 1);
-  slides.forEach((slide, i) => gsap.set(slide, { xPercent: wrap(offset - i) * 100 }));
+  slides.forEach((slide, i) => gsap.set(slide, { xPercent: wrap(i - offset) * 100 }));
 }
 
-// Infinite carousel. Clicking the right half (">") slides the image to the right and shows the one
-// on its left, the next one in the studio order. The left half ("<") goes the other way.
+// Infinite carousel. Clicking the right half (">") slides the image to the left and shows the one
+// on its right, the next one in the studio order. The left half ("<") goes the other way.
 export default function ExhibitionCarousel({ images, name }) {
   const slidesRef = useRef([]);
   // Position of the strip, in images, tweened by gsap.

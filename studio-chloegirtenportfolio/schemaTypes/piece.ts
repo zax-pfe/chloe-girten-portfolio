@@ -1,4 +1,5 @@
 import {ImageIcon} from '@sanity/icons/Image'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {defineField, defineType} from 'sanity'
 
 export const piece = defineType({
@@ -6,7 +7,10 @@ export const piece = defineType({
   title: 'Pieces',
   type: 'document',
   icon: ImageIcon,
+  // Order of the pieces on the site, set by drag and drop in the "Pieces" list (see sanity.config.ts).
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({type: 'piece'}),
     defineField({
       name: 'image',
       title: 'Image',

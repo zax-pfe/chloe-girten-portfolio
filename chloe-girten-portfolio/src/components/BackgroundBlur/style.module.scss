@@ -1,12 +1,14 @@
 .backgroundBlur {
   position: fixed;
   inset: 0;
-  // Same layer as the floating images but rendered after them: above them and the title,
-  // below the navbar and the page content.
-  z-index: 1;
+  // In the background layer (see Background): above the title and the floating images,
+  // under the selected piece (z-index 10, set in FloatingImage), which stays sharp.
+  // The whole layer stays below the navbar and the page content.
+  z-index: 5;
+  // The background layer lets the pointer through; the blur catches it.
+  pointer-events: auto;
   // The CSS pipeline adds the -webkit- prefix itself; writing both made it keep only the prefixed one.
   backdrop-filter: blur(5px);
-  // background: rgba(255, 255, 255, 0.5);
   // The background color at 50% opacity.
   background-color: color-mix(in srgb, var(--background) 50%, transparent);
 }

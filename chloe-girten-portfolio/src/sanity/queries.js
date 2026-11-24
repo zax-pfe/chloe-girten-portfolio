@@ -1,8 +1,9 @@
 import { defineQuery } from "next-sanity";
 
 // Pieces without both images are skipped, the gallery needs the two to overlay them.
+// Ordered by drag and drop in the studio (orderRank); pieces not ordered yet fall back to the date.
 export const PIECES_QUERY = defineQuery(`
-  *[_type == "piece" && defined(image.asset) && defined(imageNoBg.asset)] | order(date desc, _createdAt desc) {
+  *[_type == "piece" && defined(image.asset) && defined(imageNoBg.asset)] | order(orderRank asc, date desc, _createdAt desc) {
     "id": _id,
     title,
     date,
@@ -14,8 +15,9 @@ export const PIECES_QUERY = defineQuery(`
 
 // Drawings without an image are skipped. The hover image is optional:
 // "hover" is null when there is none, and the grid then shows no swap.
+// Ordered by drag and drop in the studio (orderRank); drawings not ordered yet fall back to the date.
 export const DRAWINGS_QUERY = defineQuery(`
-  *[_type == "drawing" && defined(image.asset)] | order(date desc, _createdAt desc) {
+  *[_type == "drawing" && defined(image.asset)] | order(orderRank asc, date desc, _createdAt desc) {
     "id": _id,
     title,
     date,

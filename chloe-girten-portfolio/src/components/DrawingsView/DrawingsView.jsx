@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PageWrapper from "@/components/PageWrapper/PageWrapper";
 import DrawingGrid from "@/components/DrawingGrid/DrawingGrid";
 import DrawingStory from "@/components/DrawingStory/DrawingStory";
 import styles from "./style.module.scss";
@@ -15,6 +16,7 @@ export default function DrawingsView({ items, story }) {
 
   return (
     <>
+      {/* Outside the PageWrapper: placed in the panel, it stays put while the page scrolls. */}
       <div className={styles.modeSelector} aria-label="Drawing view">
         <button
           type="button"
@@ -35,7 +37,9 @@ export default function DrawingsView({ items, story }) {
         </button>
       </div>
 
-      {mode === MODES.GRID ? <DrawingGrid items={items} /> : <DrawingStory texts={story} />}
+      <PageWrapper>
+        {mode === MODES.GRID ? <DrawingGrid items={items} /> : <DrawingStory texts={story} />}
+      </PageWrapper>
     </>
   );
 }

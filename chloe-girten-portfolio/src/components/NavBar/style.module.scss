@@ -12,7 +12,7 @@
   border: 1px solid #000;
   background: #fffbf6;
   pointer-events: all;
-  // Above the background blur panel (z-index 1): stays sharp and hoverable.
+  // Above the close zones (z-index 1) and the background layer with its blur: stays sharp and hoverable.
   position: relative;
   z-index: 2;
 
