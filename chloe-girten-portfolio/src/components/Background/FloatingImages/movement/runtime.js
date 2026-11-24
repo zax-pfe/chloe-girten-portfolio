@@ -12,18 +12,42 @@ export const GLOBAL_DEFAULTS = { speedMultiplier: 1, paused: false, seed: 1, ove
 // Live settings, read every frame and edited by the debug panel. No React state: no re-render.
 export const settings = { variant: null, ...GLOBAL_DEFAULTS, fps: 0 };
 
-// Values of every piece ("Pieces" folder of the panel), same meaning as in floatingImgData.js.
+// Fallback when an entry of floatingImgData.js misses a value.
 export const PIECE_DEFAULTS = { speed: 1, scaleFloating: 0.4, scaleOpen: 1 };
-export const pieceSettings = { ...PIECE_DEFAULTS };
 
-// Speed and sizes of a piece. For now the panel's values, the same for every piece.
-// To use floatingImgData.js instead: piece.data.speed, piece.data.scaleFloating, piece.data.scaleOpen.
-// Returns true when the floating size changed (the piece has to be resized).
+// Starting values of a piece: its entry in floatingImgData.js.
+export function getPieceDefaults(data) {
+  return {
+    speed: data.speed ?? PIECE_DEFAULTS.speed,
+    scaleFloating: data.scaleFloating ?? PIECE_DEFAULTS.scaleFloating,
+    scaleOpen: data.scaleOpen ?? PIECE_DEFAULTS.scaleOpen,
+  };
+}
+
+// Live values of each piece, by id ("Pieces" folder of the panel, one subfolder per image).
+const pieceSettings = {};
+
+export function getPieceSettings(data) {
+  pieceSettings[data.id] ??= getPieceDefaults(data);
+  return pieceSettings[data.id];
+}
+
+export function resetPieceSettings(data) {
+  Object.assign(getPieceSettings(data), getPieceDefaults(data));
+}
+
+// Name of a piece's folder in the panel (also its key in saved presets).
+export function getPieceLabel(data) {
+  return `${data.id} · ${data.title}`;
+}
+
+// Copies the piece's live values onto it. Returns true when its floating size changed (it has to be resized).
 function resolvePieceSettings(piece) {
-  const resized = piece.scaleFloating !== pieceSettings.scaleFloating;
-  piece.speed = pieceSettings.speed;
-  piece.scaleFloating = pieceSettings.scaleFloating;
-  piece.scaleOpen = pieceSettings.scaleOpen;
+  const values = getPieceSettings(piece.data);
+  const resized = piece.scaleFloating !== values.scaleFloating;
+  piece.speed = values.speed;
+  piece.scaleFloating = values.scaleFloating;
+  piece.scaleOpen = values.scaleOpen;
   return resized;
 }
 
@@ -40,15 +64,19 @@ export function resetVariantParams(name) {
 }
 
 // Copies known values of a panel save (gui.save() format) into the live settings and params.
-export function applyPanelValues(saved) {
+export function applyPanelValues(saved, pieces) {
   const variant = saved?.controllers?.variant;
   const global = saved?.folders?.Global?.controllers ?? {};
   Object.keys(GLOBAL_DEFAULTS).forEach((key) => {
     if (key in global) settings[key] = global[key];
   });
-  const pieces = saved?.folders?.Pieces?.controllers ?? {};
-  Object.keys(PIECE_DEFAULTS).forEach((key) => {
-    if (key in pieces) pieceSettings[key] = pieces[key];
+  const pieceFolders = saved?.folders?.Pieces?.folders ?? {};
+  pieces.forEach(({ data }) => {
+    const values = pieceFolders[getPieceLabel(data)]?.controllers ?? {};
+    const live = getPieceSettings(data);
+    Object.keys(PIECE_DEFAULTS).forEach((key) => {
+      if (key in values) live[key] = values[key];
+    });
   });
   if (!MOVEMENTS[variant]) return;
   const params = getVariantParams(variant);
@@ -178,7 +206,7 @@ export function createMovementRuntime({ pieces, stage, timeScale }) {
   };
 
   // Development: restore the panel's last values before the first frame.
-  if (!settings.variant) applyPanelValues(readStoredPanel());
+  if (!settings.variant) applyPanelValues(readStoredPanel(), pieces);
   return runtime;
 }
 
@@ -192,9 +220,7 @@ export function createPiece(data, index) {
     height: 0,
     radius: 0,
     seed: data.id,
-    speed: PIECE_DEFAULTS.speed,
-    scaleFloating: PIECE_DEFAULTS.scaleFloating,
-    scaleOpen: PIECE_DEFAULTS.scaleOpen,
+    ...getPieceDefaults(data),
     activity: 1,
     held: false,
     traits: { basePosition: [0, 0], rotation: 0, direction: 0, amplitude: 0, frequency: 0, phase: [0, 0], z: 0.5 },

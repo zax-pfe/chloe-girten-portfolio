@@ -2,9 +2,10 @@ import GUI from "lil-gui";
 import { MOVEMENTS, STORAGE_KEY } from "../index";
 import {
   GLOBAL_DEFAULTS,
-  PIECE_DEFAULTS,
+  getPieceLabel,
+  getPieceSettings,
   getVariantParams,
-  pieceSettings,
+  resetPieceSettings,
   resetVariantParams,
   settings,
 } from "../runtime";
@@ -50,11 +51,15 @@ export function createMovementPanel(runtime, stage) {
 
   // ______________________ PIECES ______________________//
 
-  // Same values for every piece for now (see resolvePieceSettings in runtime.js).
+  // One folder per image, starting from its values in floatingImgData.js.
   const piecesFolder = gui.addFolder("Pieces");
-  piecesFolder.add(pieceSettings, "speed", 0, 3, 0.01);
-  piecesFolder.add(pieceSettings, "scaleFloating", 0.1, 1, 0.01);
-  piecesFolder.add(pieceSettings, "scaleOpen", 0.2, 1.5, 0.01);
+  runtime.pieces.forEach(({ data }) => {
+    const values = getPieceSettings(data);
+    const folder = piecesFolder.addFolder(getPieceLabel(data)).close();
+    folder.add(values, "speed", 0, 3, 0.01);
+    folder.add(values, "scaleFloating", 0.1, 1, 0.01);
+    folder.add(values, "scaleOpen", 0.2, 1.5, 0.01);
+  });
 
   // ______________________ PRESETS ______________________//
 
@@ -85,7 +90,7 @@ export function createMovementPanel(runtime, stage) {
     {
       Reset: () => {
         Object.assign(settings, GLOBAL_DEFAULTS);
-        Object.assign(pieceSettings, PIECE_DEFAULTS);
+        runtime.pieces.forEach(({ data }) => resetPieceSettings(data));
         resetVariantParams(settings.variant);
         gui.controllersRecursive().forEach((controller) => controller.updateDisplay());
         runtime.setVariant(settings.variant);

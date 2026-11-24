@@ -17,7 +17,8 @@ const description =
 // - scaleFloating: height while floating, as a ratio of the screen height (0.4 = 40%).
 // - scaleOpen: size once opened, as a ratio of the screen (1 = as big as fits on screen).
 //
-// Not connected yet: for now the debug panel's "Pieces" values apply to every piece.
+// These are the starting values of the debug panel ("Pieces" folder, one subfolder per image).
+// Values edited in the panel win until you hit Presets > Reset.
 export const floatingImgData = [
   { id: 1, image: floating1, title: "Good boy", date: "2022", description, speed: 0.8, scaleFloating: 0.46, scaleOpen: 1 },
   { id: 2, image: floating2, title: "Chouette chien", date: "2023", description, speed: 1, scaleFloating: 0.42, scaleOpen: 1 },
