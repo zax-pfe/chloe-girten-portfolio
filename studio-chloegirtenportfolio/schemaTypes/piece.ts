@@ -45,6 +45,17 @@ export const piece = defineType({
           invert: false,
         }),
     }),
+    // Optional: the pieces already in the studio don't have them yet.
+    defineField({
+      name: 'size',
+      title: 'Taille',
+      type: 'string',
+    }),
+    defineField({
+      name: 'material',
+      title: 'Matériau',
+      type: 'string',
+    }),
     defineField({
       name: 'description',
       title: 'Description',
