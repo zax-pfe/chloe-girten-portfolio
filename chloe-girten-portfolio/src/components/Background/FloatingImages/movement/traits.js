@@ -1,7 +1,6 @@
 import { createRandom } from "./utils";
 
 // Ranges the generated traits are picked in.
-const ROTATION_MAX = 25; // degrees, either side
 const AMPLITUDE = [8, 20]; // px, wobble size
 const FREQUENCY = [0.06, 0.15]; // Hz, wobble speed
 // Screen ratio of the start grid (width / height): one cell per piece.
@@ -38,8 +37,10 @@ export function generateTraits(pieces, seed) {
     // Somewhere in the middle 60% of its cell, as a ratio from the center (-0.5 to 0.5).
     traits.basePosition[0] = ((cell % columns) + 0.2 + 0.6 * random()) / columns - 0.5;
     traits.basePosition[1] = (Math.floor(cell / columns) + 0.2 + 0.6 * random()) / rows - 0.5;
-    traits.rotation = (random() * 2 - 1) * ROTATION_MAX;
-    traits.spin = random() < 0.5 ? -1 : 1;
+    // Where the piece starts in its rotation swing, so pieces don't swing in sync.
+    traits.rotationPhase = random() * Math.PI * 2;
+    // Where the piece reads the noise field, so each one wanders its own way.
+    traits.noiseOffset = random() * 100;
     traits.direction = random() * 360;
     traits.amplitude = between(AMPLITUDE, random);
     traits.frequency = between(FREQUENCY, random);

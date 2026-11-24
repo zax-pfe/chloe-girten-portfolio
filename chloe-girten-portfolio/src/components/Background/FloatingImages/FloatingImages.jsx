@@ -14,9 +14,8 @@ import styles from "./style.module.scss";
 // Ratio of the viewport, from its center.
 const TARGET_POSITION = [0.2, 0];
 const TRANSITION_DURATION = 1.2;
+// The selected piece easing back into its float, once back in place. The others never stop.
 const RESUME_DURATION = 0.8;
-// Slow down of the other images while a piece is selected.
-const SLOWDOWN_DURATION = 1.2;
 
 function FloatingImage({ data, index, piecesRef, onSelect }) {
   const { id, image, title } = data;
@@ -120,10 +119,6 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
 export default function FloatingImages() {
   const stageRef = useRef(null);
   const piecesRef = useRef([]);
-  // Speed factor shared by every image, eased to 0 while a piece is selected.
-  const globalMotion = useRef({ speed: 1 });
-  // Stays true until the selected piece is back in place.
-  const hasSelection = usePieceStore((state) => state.selectedPiece !== null);
 
   const handleSelect = (id) => {
     const { selectedPiece, openPiece } = usePieceStore.getState();
@@ -140,7 +135,7 @@ export default function FloatingImages() {
     const pieces = piecesRef.current.filter(Boolean);
     pieces.forEach((piece) => gsap.set(piece.element, { xPercent: -50, yPercent: -50 }));
 
-    const runtime = createMovementRuntime({ pieces, stage, timeScale: globalMotion.current });
+    const runtime = createMovementRuntime({ pieces, stage });
     runtime.measure();
     runtime.setVariant(getInitialMovement());
     pieces.forEach((piece) => gsap.set(piece.element, { autoAlpha: 1 }));
@@ -166,22 +161,6 @@ export default function FloatingImages() {
       observer.disconnect();
       runtime.destroy();
     };
-  }, []);
-
-  // ______________________ SLOW DOWN ON SELECTION ______________________//
-
-  useEffect(() => {
-    gsap.to(globalMotion.current, {
-      speed: hasSelection ? 0 : 1,
-      duration: hasSelection ? SLOWDOWN_DURATION : RESUME_DURATION,
-      ease: "power2.inOut",
-      overwrite: true,
-    });
-  }, [hasSelection]);
-
-  useEffect(() => {
-    const motion = globalMotion.current;
-    return () => gsap.killTweensOf(motion);
   }, []);
 
   return (

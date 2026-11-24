@@ -13,6 +13,28 @@ import { createOverlay } from "./overlay";
 
 // Development-only tuning panel. Loaded dynamically by FloatingImages.
 // Shortcuts: D panel, P pause, 1-5 variants, R reseed.
+
+// Shown when hovering a setting (the variants bring their own, in `descriptions`).
+const DESCRIPTIONS = {
+  speedMultiplier: "Vitesse de tout le mouvement. 1 = normal, 0 = figé.",
+  amplitude:
+    "Rotation maximale, en degrés de chaque côté. Les images tournent jusqu'à cet angle puis repartent dans l'autre sens.",
+  avoid: "Les images se repoussent quand elles se rapprochent.",
+  repulsion: "Force avec laquelle elles se repoussent (si avoid est coché). Plus haut = elles restent plus éloignées.",
+  paused: "Met le mouvement en pause (touche P).",
+  seed: "Graine du hasard : positions de départ, directions, ondulations... Même seed = même composition.",
+  overlay: "Dessine les repères de debug : rayon, point de départ et vitesse de chaque image.",
+  speed: "Vitesse de cette image. 1 = normal, 2 = deux fois plus rapide.",
+  scaleFloating: "Hauteur de l'image quand elle flotte, en part de la hauteur d'écran (0.4 = 40 %).",
+  scaleOpen: "Taille de l'image ouverte, en part de l'écran (1 = aussi grande que possible).",
+  rotationSpeed: "Vitesse de rotation de cette image, en degrés par seconde (0 = ne tourne pas).",
+};
+
+// Adds the hover explanation of `key` to a controller's row.
+function describe(controller, key, descriptions = DESCRIPTIONS) {
+  if (descriptions[key]) controller.domElement.title = descriptions[key];
+  return controller;
+}
 export function createMovementPanel(runtime, stage) {
   const names = Object.keys(MOVEMENTS);
   const gui = new GUI({ title: "Floating movement" });
@@ -33,10 +55,19 @@ export function createMovementPanel(runtime, stage) {
   // ______________________ GLOBAL ______________________//
 
   const global = gui.addFolder("Global");
-  global.add(settings, "speedMultiplier", 0, 5, 0.05);
-  global.add(settings, "amplitude", 0, 5, 0.05);
-  global.add(settings, "paused");
-  const seedController = global.add(settings, "seed", 1, 9999, 1).onFinishChange(() => runtime.reseed(settings.seed));
+  describe(global.add(settings, "speedMultiplier", 0, 5, 0.05), "speedMultiplier");
+  describe(global.add(settings, "amplitude", 0, 90, 0.5), "amplitude");
+  describe(
+    global.add(settings, "avoid").onChange(() => repulsionController.enable(settings.avoid)),
+    "avoid",
+  );
+  const repulsionController = describe(global.add(settings, "repulsion", 0, 5, 0.05), "repulsion");
+  repulsionController.enable(settings.avoid);
+  describe(global.add(settings, "paused"), "paused");
+  const seedController = describe(
+    global.add(settings, "seed", 1, 9999, 1).onFinishChange(() => runtime.reseed(settings.seed)),
+    "seed",
+  );
   global.add(
     {
       Reseed: () => {
@@ -47,7 +78,7 @@ export function createMovementPanel(runtime, stage) {
     },
     "Reseed",
   );
-  global.add(settings, "overlay");
+  describe(global.add(settings, "overlay"), "overlay");
   global.add(settings, "fps").decimals(0).listen().disable();
 
   // ______________________ PIECES ______________________//
@@ -57,10 +88,10 @@ export function createMovementPanel(runtime, stage) {
   runtime.pieces.forEach(({ data }) => {
     const values = getPieceSettings(data);
     const folder = piecesFolder.addFolder(getPieceLabel(data)).close();
-    folder.add(values, "speed", 0, 3, 0.01);
-    folder.add(values, "scaleFloating", 0.1, 1, 0.01);
-    folder.add(values, "scaleOpen", 0.2, 1.5, 0.01);
-    folder.add(values, "rotationSpeed", 0, 45, 0.5);
+    describe(folder.add(values, "speed", 0, 3, 0.01), "speed");
+    describe(folder.add(values, "scaleFloating", 0.1, 1, 0.01), "scaleFloating");
+    describe(folder.add(values, "scaleOpen", 0.2, 1.5, 0.01), "scaleOpen");
+    describe(folder.add(values, "rotationSpeed", 0, 45, 0.5), "rotationSpeed");
   });
 
   // ______________________ PRESETS ______________________//
@@ -116,11 +147,11 @@ export function createMovementPanel(runtime, stage) {
     variantFolder?.destroy();
     const name = settings.variant;
     const params = getVariantParams(name);
-    const ranges = MOVEMENTS[name].ranges ?? {};
+    const { ranges = {}, descriptions = {} } = MOVEMENTS[name];
     variantFolder = gui.addFolder(name);
     Object.keys(params).forEach((key) => {
-      if (ranges[key]) variantFolder.add(params, key, ...ranges[key]);
-      else variantFolder.add(params, key);
+      const controller = ranges[key] ? variantFolder.add(params, key, ...ranges[key]) : variantFolder.add(params, key);
+      describe(controller, key, descriptions);
     });
     // Before the presets, which stay last.
     gui.$children.insertBefore(variantFolder.domElement, presets.domElement);

@@ -16,7 +16,8 @@ const description =
 // - speed: speed of the piece, 1 = normal, 2 = twice as fast.
 // - scaleFloating: height while floating, as a ratio of the screen height (0.4 = 40%).
 // - scaleOpen: size once opened, as a ratio of the screen (1 = as big as fits on screen).
-// - rotationSpeed: rotation speed, in degrees per second (0 = no rotation). The direction comes from the seed.
+// - rotationSpeed: rotation speed, in degrees per second (0 = no rotation). Pieces swing back and forth
+//   within the debug panel's global amplitude.
 //
 // These are the starting values of the debug panel ("Pieces" folder, one subfolder per image).
 // Values edited in the panel win until you hit Presets > Reset.

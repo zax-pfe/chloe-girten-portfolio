@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { MOVEMENTS, getInitialMovement, readStoredPanel } from "./index";
+import { applyAvoidance } from "./avoidance";
 import { generateTraits } from "./traits";
 
 /** @typedef {import("./types").Piece} Piece */
@@ -7,10 +8,13 @@ import { generateTraits } from "./traits";
 // Longest frame step: a hiccup (tab switch, GC) never makes pieces jump.
 const MAX_DT = 0.05;
 
-// amplitude: multiplies the wobble size of every piece (each keeps its own, generated from the seed).
+// amplitude: how far pieces rotate, in degrees either side of straight. Each one swings back and forth within it.
+// avoid / repulsion: pieces push each other away (avoidance.js), with this strength.
 export const GLOBAL_DEFAULTS = {
   speedMultiplier: 1,
-  amplitude: 1,
+  amplitude: 15,
+  avoid: false,
+  repulsion: 1,
   paused: false,
   seed: 1,
   overlay: false,
@@ -54,7 +58,8 @@ export function getPieceLabel(data) {
   return `${data.id} · ${data.title}`;
 }
 
-// Copies the piece's live values onto it, and resolves its wobble size with the global amplitude. Returns true when its floating size changed (it has to be resized).
+// Copies the piece's live values (and the global rotation amplitude) onto it.
+// Returns true when its floating size changed (it has to be resized).
 function resolvePieceSettings(piece) {
   const values = getPieceSettings(piece.data);
   const resized = piece.scaleFloating !== values.scaleFloating;
@@ -62,7 +67,7 @@ function resolvePieceSettings(piece) {
   piece.scaleFloating = values.scaleFloating;
   piece.scaleOpen = values.scaleOpen;
   piece.rotationSpeed = values.rotationSpeed;
-  piece.amplitude = piece.traits.amplitude * settings.amplitude;
+  piece.rotationAmplitude = settings.amplitude;
   return resized;
 }
 
@@ -103,10 +108,9 @@ export function applyPanelValues(saved, pieces) {
 
 /**
  * Drives the pieces with the active variant and renders them with gsap.
- * @param {{ pieces: Piece[], stage: HTMLElement, timeScale: { speed: number } }} options
- *   timeScale.speed is eased by the component (slow down while a piece is selected).
+ * @param {{ pieces: Piece[], stage: HTMLElement }} options
  */
-export function createMovementRuntime({ pieces, stage, timeScale }) {
+export function createMovementRuntime({ pieces, stage }) {
   const bounds = { width: 0, height: 0, seed: settings.seed };
   const pointer = { x: 0, y: 0, active: false };
   let strategy = null;
@@ -212,9 +216,10 @@ export function createMovementRuntime({ pieces, stage, timeScale }) {
       if (delta > 0) settings.fps += (1 / delta - settings.fps) * 0.05;
       resolveAll();
       const frozen = settings.paused || reducedMotion.matches;
-      const dt = frozen ? 0 : Math.min(delta, MAX_DT) * settings.speedMultiplier * timeScale.speed;
+      const dt = frozen ? 0 : Math.min(delta, MAX_DT) * settings.speedMultiplier;
       time += dt;
       states = strategy.update(dt, time, pointer);
+      if (settings.avoid) applyAvoidance(pieces, states, bounds, dt, settings.repulsion);
       render();
       runtime.onFrame?.(states, dt);
     },
@@ -244,11 +249,11 @@ export function createPiece(data, index) {
     ...getPieceDefaults(data),
     activity: 1,
     held: false,
-    amplitude: 0,
+    rotationAmplitude: 0,
     traits: {
       basePosition: [0, 0],
-      rotation: 0,
-      spin: 1,
+      rotationPhase: 0,
+      noiseOffset: 0,
       direction: 0,
       amplitude: 0,
       frequency: 0,
