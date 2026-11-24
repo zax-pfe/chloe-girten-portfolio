@@ -5,7 +5,6 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { usePieceStore } from "@/store/store";
 import { floatingImgData } from "@/data/floatingImgData";
-import { images_config } from "./imageList";
 import { getInitialMovement } from "./movement";
 import { createMovementRuntime, createPiece } from "./movement/runtime";
 import styles from "./style.module.scss";
@@ -14,28 +13,24 @@ import styles from "./style.module.scss";
 
 // Ratio of the viewport, from its center.
 const TARGET_POSITION = [0.2, 0];
-// Box every selected image fits into, whatever its base size: ratio of the viewport [width, height].
-const TARGET_SIZE = [1, 1];
 const TRANSITION_DURATION = 1.2;
 const RESUME_DURATION = 0.8;
 // Slow down of the other images while a piece is selected.
 const SLOWDOWN_DURATION = 1.2;
-const IMAGE_CONFIGS = images_config;
 
 function FloatingImage({ data, index, piecesRef, onSelect }) {
-  const { id, height } = data;
+  const { id, image, title } = data;
   const isSelected = usePieceStore((state) => state.isModalOpen && state.selectedPiece?.id === id);
   const clearPiece = usePieceStore((state) => state.clearPiece);
 
-  const { image, title } = floatingImgData.find((piece) => piece.id === id);
   const aspect = image.width / image.height;
-  // Largest width the image is shown at: selected, contained in the TARGET_SIZE box.
-  const selectedSizes = `min(${TARGET_SIZE[0] * 100}vw, ${Math.round(TARGET_SIZE[1] * 100 * aspect)}vh)`;
+  // Largest width the image is shown at: opened, contained in the screen.
+  const selectedSizes = `min(100vw, ${Math.round(100 * aspect)}vh)`;
 
   const imageRef = useRef(null);
   const returningRef = useRef(false);
   const originalTransform = useRef(null);
-  // Piece moved by the movement runtime; `held` and `speed` hand it over during a selection.
+  // Piece moved by the movement runtime; `held` and `activity` hand it over during a selection.
   const pieceRef = useRef(null);
 
   useEffect(() => {
@@ -54,7 +49,7 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
 
     if (isSelected) {
       gsap.killTweensOf(piece);
-      piece.speed = 0;
+      piece.activity = 0;
       piece.held = true;
       originalTransform.current = { ...piece.rendered };
       gsap.set(element, { zIndex: 10 });
@@ -62,11 +57,10 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
         x: TARGET_POSITION[0] * window.innerWidth,
         y: TARGET_POSITION[1] * window.innerHeight,
         rotation: 0,
-        // Contain fit, so every image ends up the same size.
-        scale: Math.min(
-          (TARGET_SIZE[0] * window.innerWidth) / element.offsetWidth,
-          (TARGET_SIZE[1] * window.innerHeight) / element.offsetHeight,
-        ),
+        // Contain fit in the screen, times the piece's open size.
+        scale:
+          piece.scaleOpen *
+          Math.min(window.innerWidth / element.offsetWidth, window.innerHeight / element.offsetHeight),
         ...options,
       });
     } else if (piece.held && originalTransform.current) {
@@ -83,7 +77,7 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
           returningRef.current = false;
           gsap.set(element, { clearProps: "zIndex" });
           gsap.to(piece, {
-            speed: 1,
+            activity: 1,
             duration: RESUME_DURATION,
             ease: "power2.inOut",
             overwrite: true,
@@ -99,7 +93,8 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
       type="button"
       className={styles.image}
       aria-label={title}
-      style={{ height: `${height}vh`, aspectRatio: aspect }}
+      // Height is set by the movement runtime (scaleFloating).
+      style={{ aspectRatio: aspect }}
       ref={(element) => {
         imageRef.current = element;
         pieceRef.current ??= createPiece(data, index);
@@ -191,8 +186,8 @@ export default function FloatingImages() {
 
   return (
     <div className={styles.stage} ref={stageRef}>
-      {IMAGE_CONFIGS.map((image, index) => (
-        <FloatingImage key={image.id} data={image} index={index} piecesRef={piecesRef} onSelect={handleSelect} />
+      {floatingImgData.map((piece, index) => (
+        <FloatingImage key={piece.id} data={piece} index={index} piecesRef={piecesRef} onSelect={handleSelect} />
       ))}
     </div>
   );

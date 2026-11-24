@@ -1,6 +1,13 @@
 import GUI from "lil-gui";
 import { MOVEMENTS, STORAGE_KEY } from "../index";
-import { GLOBAL_DEFAULTS, getVariantParams, resetVariantParams, settings } from "../runtime";
+import {
+  GLOBAL_DEFAULTS,
+  PIECE_DEFAULTS,
+  getVariantParams,
+  pieceSettings,
+  resetVariantParams,
+  settings,
+} from "../runtime";
 import { createOverlay } from "./overlay";
 
 // Development-only tuning panel. Loaded dynamically by FloatingImages.
@@ -41,6 +48,14 @@ export function createMovementPanel(runtime, stage) {
   global.add(settings, "overlay");
   global.add(settings, "fps").decimals(0).listen().disable();
 
+  // ______________________ PIECES ______________________//
+
+  // Same values for every piece for now (see resolvePieceSettings in runtime.js).
+  const piecesFolder = gui.addFolder("Pieces");
+  piecesFolder.add(pieceSettings, "speed", 0, 3, 0.01);
+  piecesFolder.add(pieceSettings, "scaleFloating", 0.1, 1, 0.01);
+  piecesFolder.add(pieceSettings, "scaleOpen", 0.2, 1.5, 0.01);
+
   // ______________________ PRESETS ______________________//
 
   const presets = gui.addFolder("Presets");
@@ -70,6 +85,7 @@ export function createMovementPanel(runtime, stage) {
     {
       Reset: () => {
         Object.assign(settings, GLOBAL_DEFAULTS);
+        Object.assign(pieceSettings, PIECE_DEFAULTS);
         resetVariantParams(settings.variant);
         gui.controllersRecursive().forEach((controller) => controller.updateDisplay());
         runtime.setVariant(settings.variant);

@@ -21,19 +21,21 @@ function measureWrap(bounds) {
 }
 
 /**
- * Reference: the original motion, unchanged. Straight drift along `direction`,
- * sine wobble on each axis, and a modulo that brings pieces back on the opposite side.
+ * Reference: the original motion algorithm. Straight drift along `direction`, sine wobble
+ * on each axis, and a modulo that brings pieces back on the opposite side.
+ * Its traits (start, direction, wobble...) are generated from the seed (../traits.js).
  * @type {MovementStrategy}
  */
 export const baseline = {
   name: "baseline",
   defaults: {
-    globalSpeed: 3,
+    // Drift speed of a piece at speed 1, in px/s.
+    driftSpeed: 55,
     // Rotation sway while floating, in degrees.
     rotationAmplitude: 4,
   },
   ranges: {
-    globalSpeed: [0, 10, 0.1],
+    driftSpeed: [0, 200, 1],
     rotationAmplitude: [0, 20, 0.1],
   },
 
@@ -44,10 +46,11 @@ export const baseline = {
     wrapWidths = new Float64Array(pieces.length);
     wrapHeights = new Float64Array(pieces.length);
     measureWrap(bounds);
-    states = pieces.map((piece, i) => ({
-      x: piece.data.basePosition[0] * wrapWidths[i],
-      y: piece.data.basePosition[1] * wrapHeights[i],
-      rotation: piece.data.rotation,
+    // Start positions spread over the visible screen.
+    states = pieces.map((piece) => ({
+      x: piece.traits.basePosition[0] * bounds.width,
+      y: piece.traits.basePosition[1] * bounds.height,
+      rotation: piece.traits.rotation,
       scale: 1,
       opacity: 1,
     }));
@@ -62,11 +65,11 @@ export const baseline = {
       const piece = pieces[i];
       if (piece.held) continue;
       const state = states[i];
-      const { direction, speed, amplitude, frequency, phase, rotation } = piece.data;
+      const { direction, amplitude, frequency, phase, rotation } = piece.traits;
 
       // Advance from the current position so floating resumes smoothly after a selection.
-      const pieceDt = dt * piece.speed;
-      const distance = pieceDt * speed * params.globalSpeed;
+      const pieceDt = dt * piece.activity;
+      const distance = pieceDt * piece.speed * params.driftSpeed;
       const previousTime = times[i];
       times[i] += pieceDt;
       const time = times[i];

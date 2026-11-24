@@ -4,7 +4,7 @@ const COLOR = "rgba(255, 0, 80, 0.85)";
 // Length of the speed vector: where the piece will be in this many seconds.
 const VELOCITY_SCALE = 1;
 
-// Canvas over the stage: radius, anchor and speed of each piece, plus the variant's own drawing.
+// Canvas over the stage: radius, anchor (generated start position) and speed of each piece, plus the variant's own drawing.
 export function createOverlay(runtime, stage) {
   const canvas = document.createElement("canvas");
   Object.assign(canvas.style, {
@@ -56,8 +56,8 @@ export function createOverlay(runtime, stage) {
       g.setLineDash([]);
 
       // Anchor, linked to the piece.
-      const ax = piece.anchor[0] * width;
-      const ay = piece.anchor[1] * height;
+      const ax = piece.traits.basePosition[0] * width;
+      const ay = piece.traits.basePosition[1] * height;
       g.beginPath();
       g.moveTo(ax - 6, ay - 6);
       g.lineTo(ax + 6, ay + 6);
