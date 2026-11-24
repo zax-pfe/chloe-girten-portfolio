@@ -40,7 +40,8 @@
  * @property {number} rotationAmplitude Max rotation, in degrees either side (global amplitude).
  * @property {PieceTraits} traits
  * @property {number} activity 0 to 1, eased by the selection: multiply the piece's dt by it.
- * @property {boolean} held True while the piece is selected: leave its state untouched.
+ * @property {boolean} held True while the piece is selected or dragged: leave its state untouched.
+ * @property {boolean} placed Set after moving `rendered` by hand: the runtime moves the piece's state there.
  */
 
 /**
@@ -58,7 +59,8 @@
  */
 
 /**
- * One interchangeable movement. `update` must not allocate: mutate and return the same states.
+ * One interchangeable movement. `update` must not allocate: mutate and return the same states,
+ * and move each piece from its current state (the runtime may move it, e.g. after a drag).
  * @typedef {object} MovementStrategy
  * @property {string} name
  * @property {Record<string, number | boolean>} defaults Tunable params; the live copy is passed to init.

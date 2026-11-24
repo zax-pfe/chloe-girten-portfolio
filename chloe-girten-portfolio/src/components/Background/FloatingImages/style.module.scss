@@ -10,6 +10,8 @@
     cursor: pointer;
     pointer-events: auto;
     user-select: none;
+    // Dragging a piece on touch screens must not scroll or zoom the page.
+    touch-action: none;
     -webkit-user-drag: none;
 
     .img {

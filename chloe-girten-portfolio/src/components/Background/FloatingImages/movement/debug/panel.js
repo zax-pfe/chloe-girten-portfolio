@@ -1,7 +1,9 @@
 import GUI from "lil-gui";
 import { MOVEMENTS, STORAGE_KEY } from "../index";
 import {
+  DRAG_DEFAULTS,
   GLOBAL_DEFAULTS,
+  dragSettings,
   getPieceLabel,
   getPieceSettings,
   getVariantParams,
@@ -28,6 +30,12 @@ const DESCRIPTIONS = {
   scaleFloating: "Hauteur de l'image quand elle flotte, en part de la hauteur d'écran (0.4 = 40 %).",
   scaleOpen: "Taille de l'image ouverte, en part de l'écran (1 = aussi grande que possible).",
   rotationSpeed: "Vitesse de rotation de cette image, en degrés par seconde (0 = ne tourne pas).",
+  elastic:
+    "Résistance quand on tire une image au-delà du bord de l'écran. 0 = bloquée au bord, 1 = suit la souris (puis revient en rebondissant).",
+  power: "Élan au lâcher : jusqu'où l'image continue sur sa lancée. 0 = s'arrête net.",
+  timeConstant: "Durée du ralentissement de l'élan, en millisecondes. Plus haut = glisse plus longtemps.",
+  bounceStiffness: "Raideur du ressort qui ramène l'image dans l'écran. Plus haut = retour plus vif.",
+  bounceDamping: "Amortissement de ce ressort. Plus bas = rebondit davantage avant de se poser.",
 };
 
 // Adds the hover explanation of `key` to a controller's row.
@@ -94,6 +102,15 @@ export function createMovementPanel(runtime, stage) {
     describe(folder.add(values, "rotationSpeed", 0, 45, 0.5), "rotationSpeed");
   });
 
+  // ______________________ DRAG ______________________//
+
+  const dragFolder = gui.addFolder("Drag").close();
+  describe(dragFolder.add(dragSettings, "elastic", 0, 1, 0.01), "elastic");
+  describe(dragFolder.add(dragSettings, "power", 0, 1, 0.01), "power");
+  describe(dragFolder.add(dragSettings, "timeConstant", 0, 1000, 10), "timeConstant");
+  describe(dragFolder.add(dragSettings, "bounceStiffness", 0, 1000, 5), "bounceStiffness");
+  describe(dragFolder.add(dragSettings, "bounceDamping", 0, 100, 1), "bounceDamping");
+
   // ______________________ PRESETS ______________________//
 
   const presets = gui.addFolder("Presets");
@@ -125,6 +142,7 @@ export function createMovementPanel(runtime, stage) {
     {
       Reset: () => {
         Object.assign(settings, GLOBAL_DEFAULTS);
+        Object.assign(dragSettings, DRAG_DEFAULTS);
         runtime.pieces.forEach(({ data }) => resetPieceSettings(data));
         resetVariantParams(settings.variant);
         gui.controllersRecursive().forEach((controller) => controller.updateDisplay());

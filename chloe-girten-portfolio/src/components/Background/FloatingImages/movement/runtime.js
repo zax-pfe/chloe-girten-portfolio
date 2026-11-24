@@ -23,6 +23,11 @@ export const GLOBAL_DEFAULTS = {
 // Live settings, read every frame and edited by the debug panel. No React state: no re-render.
 export const settings = { variant: null, ...GLOBAL_DEFAULTS, fps: 0 };
 
+// Drag feel ("Drag" folder of the panel), Framer Motion's names and defaults (see ../drag.js).
+// elastic: dragElastic. power, timeConstant (ms), bounceStiffness, bounceDamping: dragTransition.
+export const DRAG_DEFAULTS = { elastic: 1, power: 0.1, timeConstant: 250, bounceStiffness: 100, bounceDamping: 25 };
+export const dragSettings = { ...DRAG_DEFAULTS };
+
 // Fallback when an entry of floatingImgData.js misses a value.
 export const PIECE_DEFAULTS = {
   speed: 1,
@@ -89,6 +94,10 @@ export function applyPanelValues(saved, pieces) {
   const global = saved?.folders?.Global?.controllers ?? {};
   Object.keys(GLOBAL_DEFAULTS).forEach((key) => {
     if (key in global) settings[key] = global[key];
+  });
+  const drag = saved?.folders?.Drag?.controllers ?? {};
+  Object.keys(DRAG_DEFAULTS).forEach((key) => {
+    if (key in drag) dragSettings[key] = drag[key];
   });
   const pieceFolders = saved?.folders?.Pieces?.folders ?? {};
   pieces.forEach(({ data }) => {
@@ -215,6 +224,14 @@ export function createMovementRuntime({ pieces, stage }) {
       if (!strategy) return;
       if (delta > 0) settings.fps += (1 / delta - settings.fps) * 0.05;
       resolveAll();
+      // Pieces moved by hand (drag): the variant carries on from where they were dropped.
+      for (let i = 0; i < pieces.length; i++) {
+        const piece = pieces[i];
+        if (!piece.placed) continue;
+        states[i].x = piece.rendered.x;
+        states[i].y = piece.rendered.y;
+        piece.placed = false;
+      }
       const frozen = settings.paused || reducedMotion.matches;
       const dt = frozen ? 0 : Math.min(delta, MAX_DT) * settings.speedMultiplier;
       time += dt;
@@ -249,6 +266,7 @@ export function createPiece(data, index) {
     ...getPieceDefaults(data),
     activity: 1,
     held: false,
+    placed: false,
     rotationAmplitude: 0,
     traits: {
       basePosition: [0, 0],
