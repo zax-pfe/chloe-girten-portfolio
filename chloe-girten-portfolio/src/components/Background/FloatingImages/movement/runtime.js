@@ -200,13 +200,22 @@ export function createMovementRuntime({ pieces, stage }) {
       settings.variant = key;
       strategy = MOVEMENTS[key];
       bounds.seed = settings.seed;
-      setters = pieces.map(({ element }) => ({
-        x: gsap.quickSetter(element, "x", "px"),
-        y: gsap.quickSetter(element, "y", "px"),
-        rotation: gsap.quickSetter(element, "rotation", "deg"),
-        scale: gsap.quickSetter(element, "scale"),
-        opacity: gsap.quickSetter(element, "opacity"),
-      }));
+      setters = pieces.map(({ element }) => {
+        // quickSetter can't take "scale": gsap turns it into "scaleX,scaleY", which ends up
+        // as setAttribute("scaleX,scaleY") (throws on Safari, does nothing elsewhere).
+        const scaleX = gsap.quickSetter(element, "scaleX");
+        const scaleY = gsap.quickSetter(element, "scaleY");
+        return {
+          x: gsap.quickSetter(element, "x", "px"),
+          y: gsap.quickSetter(element, "y", "px"),
+          rotation: gsap.quickSetter(element, "rotation", "deg"),
+          scale: (value) => {
+            scaleX(value);
+            scaleY(value);
+          },
+          opacity: gsap.quickSetter(element, "opacity"),
+        };
+      });
       generateTraits(pieces, settings.seed);
       resolveAll();
       strategy.init(pieces, bounds, getVariantParams(key));

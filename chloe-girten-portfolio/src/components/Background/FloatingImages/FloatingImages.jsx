@@ -61,7 +61,8 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
       piece.activity = 0;
       piece.held = true;
       originalTransform.current = { ...piece.rendered };
-      gsap.set(element, { zIndex: 10 });
+      // No GPU layer while open (see .image): a layer stays drawn at its size before the scale up (blurry).
+      gsap.set(element, { zIndex: 10, willChange: "auto" });
       gsap.to(element, {
         x: TARGET_POSITION[0] * window.innerWidth,
         y: TARGET_POSITION[1] * window.innerHeight,
@@ -84,7 +85,7 @@ function FloatingImage({ data, index, piecesRef, onSelect }) {
         onComplete: () => {
           piece.held = false;
           returningRef.current = false;
-          gsap.set(element, { clearProps: "zIndex" });
+          gsap.set(element, { clearProps: "zIndex,willChange" });
           gsap.to(piece, {
             activity: 1,
             duration: RESUME_DURATION,

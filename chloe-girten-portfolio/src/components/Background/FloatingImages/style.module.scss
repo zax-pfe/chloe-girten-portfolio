@@ -13,6 +13,11 @@
     // Dragging a piece on touch screens must not scroll or zoom the page.
     touch-action: none;
     -webkit-user-drag: none;
+    // Each piece on its own GPU layer: moving it every frame doesn't repaint the background.
+    // Without it, Safari doesn't refresh what's under the blur (BackgroundBlur's backdrop-filter):
+    // the pieces look frozen, then jump to where they are when the blur goes away.
+    // Removed on the selected piece (FloatingImage), so it's drawn sharp at its open size.
+    will-change: transform;
 
     .img {
       object-fit: contain;
