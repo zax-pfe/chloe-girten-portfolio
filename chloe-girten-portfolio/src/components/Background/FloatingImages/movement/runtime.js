@@ -11,12 +11,12 @@ const MAX_DT = 0.05;
 // amplitude: how far pieces rotate, in degrees either side of straight. Each one swings back and forth within it.
 // avoid / repulsion: pieces push each other away (avoidance.js), with this strength.
 export const GLOBAL_DEFAULTS = {
-  speedMultiplier: 1,
-  amplitude: 15,
-  avoid: false,
+  speedMultiplier: 0.3,
+  amplitude: 37,
+  avoid: true,
   repulsion: 1,
   paused: false,
-  seed: 1,
+  seed: 7049,
   overlay: false,
 };
 

@@ -49,13 +49,13 @@ export const baseline = {
     // Travel speed of a piece at speed 1, in px/s.
     moveSpeed: 55,
     // How far the noise bends the heading, in degrees either side of `direction`.
-    curve: 70,
+    curve: 158,
     // How fast the noise changes: higher = tighter, more frequent curves.
     curveFrequency: 0.08,
     // Speed variation from the noise: 0 = steady, 1 = from stopped to twice as fast.
-    speedVariation: 0.4,
+    speedVariation: 0.02,
     // Multiplies the sine wobble of every piece.
-    wobble: 1,
+    wobble: 4.5,
     // Pieces turn back before the edges instead of wrapping to the opposite side.
     softEdges: true,
     // Distance from the screen edge where pieces start turning back, in px.

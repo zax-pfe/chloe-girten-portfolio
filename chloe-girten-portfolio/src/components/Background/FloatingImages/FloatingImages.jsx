@@ -5,7 +5,7 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { usePieceStore } from "@/store/store";
 import { floatingImgData } from "@/data/floatingImgData";
-import { getInitialMovement } from "./movement";
+import { DEBUG_PANEL, getInitialMovement } from "./movement";
 import { createMovementRuntime, createPiece, dragSettings } from "./movement/runtime";
 import { applyElastic, releaseVelocity, throwPiece } from "./drag";
 import styles from "./style.module.scss";
@@ -255,10 +255,10 @@ export default function FloatingImages() {
     const tick = (_time, deltaTime) => runtime.tick(deltaTime / 1000);
     gsap.ticker.add(tick);
 
-    // Debug panel, development only (never part of the production bundle).
+    // Debug panel, development only (never part of the production bundle). Switch: DEBUG_PANEL in ./movement.
     let destroyPanel = null;
     let cancelled = false;
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development" && DEBUG_PANEL) {
       import("./movement/debug/panel").then(({ createMovementPanel }) => {
         if (!cancelled) destroyPanel = createMovementPanel(runtime, stage);
       });
