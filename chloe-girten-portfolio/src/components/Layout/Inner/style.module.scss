@@ -25,3 +25,18 @@
   // A few grid columns, right after the navbar.
   grid-column: 1 / span var(--panel-compact-columns);
 }
+
+// Same look as the background blur. A filter on the panel itself, so its border is blurred
+// too (a backdrop-filter layer inside it would leave the border sharp on top).
+.blurred {
+  filter: blur(5px);
+
+  // The background color at 50% opacity, over the content.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-color: color-mix(in srgb, var(--background) 50%, transparent);
+  }
+}

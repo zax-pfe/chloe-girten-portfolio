@@ -18,6 +18,11 @@ export const useCursorStore = create((set) => ({
   clearHovered: (type) => set((state) => (state.hovered === type ? { hovered: null } : state)),
 }));
 
+// Last pointer position in the window (kept by the cursor follower), null before the first move.
+// Read by CursorTarget for an element that appears under a pointer that doesn't move: the
+// browser only sends pointerenter on the next move.
+export const lastPointer = { x: null, y: null };
+
 // Max window width (px) of each device mode, from the smallest. Wider windows are "xl".
 export const DEVICE_BREAKPOINTS = { phone: 750, m: 1300, l: 1920 };
 

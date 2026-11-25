@@ -2,14 +2,28 @@ import { defineQuery } from "next-sanity";
 
 // Pieces without both images are skipped, the gallery needs the two to overlay them.
 // Ordered by drag and drop in the studio (orderRank); pieces not ordered yet fall back to the date.
+// "slug": the piece page is /pieces/<slug>; the id stands in until the slug is set in the studio.
 export const PIECES_QUERY = defineQuery(`
   *[_type == "piece" && defined(image.asset) && defined(imageNoBg.asset)] | order(orderRank asc, date desc, _createdAt desc) {
     "id": _id,
+    "slug": coalesce(slug.current, _id),
     title,
-    date,
-    description,
     "url": image.asset->url,
     "urlNoBg": imageNoBg.asset->url
+  }
+`);
+
+// One piece, by slug (or by id, see PIECES_QUERY).
+// "images": the main image first, then the other images in the studio order.
+export const PIECE_QUERY = defineQuery(`
+  *[_type == "piece" && defined(image.asset) && (slug.current == $slug || _id == $slug)][0] {
+    "id": _id,
+    title,
+    date,
+    size,
+    material,
+    description,
+    "images": ([image] + coalesce(gallery, []))[defined(asset)].asset->url
   }
 `);
 
