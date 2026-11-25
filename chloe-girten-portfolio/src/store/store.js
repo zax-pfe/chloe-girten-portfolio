@@ -9,6 +9,18 @@ export const usePieceStore = create((set) => ({
   clearPiece: () => set({ selectedPiece: null }),
 }));
 
+// The blur that is on, never both at once:
+// "background": BackgroundBlur, hides the background (title, floating images), under the pages.
+// "page": PieceBlur, over the pages and the background, under the piece panel (PieceDetail).
+// null: none. previousBlur is the one before, to tell a switch between the two from a fade.
+// Kept up to date by BlurController.
+export const useBlurStore = create((set) => ({
+  activeBlur: null,
+  previousBlur: null,
+  setActiveBlur: (blur) =>
+    set((state) => (state.activeBlur === blur ? state : { activeBlur: blur, previousBlur: state.activeBlur })),
+}));
+
 // Kind of element under the cursor ("piece"...), read by the cursor follower to pick its label or arrow.
 export const useCursorStore = create((set) => ({
   hovered: null,

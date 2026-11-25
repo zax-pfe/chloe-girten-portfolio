@@ -14,7 +14,7 @@ const TITLE_ID = "piece-detail-title";
 // Light fade in of the whole panel when it opens.
 const PANEL_FADE = { duration: 0.3, ease: "power1.out" };
 
-// Panel of a piece, over the blurred gallery (blurred by Inner): its photos, then its details.
+// Panel of a piece, over the blurred gallery (blurred by PieceBlur): its photos, then its details.
 // It closes by clicking anywhere else (shows "close x") or with Escape, back to /pieces.
 export default function PieceDetail({ piece }) {
   const router = useRouter();

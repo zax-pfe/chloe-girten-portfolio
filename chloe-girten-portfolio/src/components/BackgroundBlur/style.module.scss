@@ -5,10 +5,12 @@
   // under the selected piece (z-index 10, set in FloatingImage), which stays sharp.
   // The whole layer stays below the navbar and the page content.
   z-index: 5;
-  // The background layer lets the pointer through; the blur catches it.
-  pointer-events: auto;
+  // The background layer lets the pointer through; the blur catches it while on (BackgroundBlur).
   // The CSS pipeline adds the -webkit- prefix itself; writing both made it keep only the prefixed one.
   backdrop-filter: blur(5px);
   // The background color at 50% opacity.
   background-color: color-mix(in srgb, var(--background) 50%, transparent);
+  // Shown by gsap (autoAlpha) while it is the active blur.
+  visibility: hidden;
+  opacity: 0;
 }

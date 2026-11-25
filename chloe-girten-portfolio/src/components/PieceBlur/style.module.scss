@@ -1,0 +1,17 @@
+// Same look as the background blur (BackgroundBlur).
+.pieceBlur {
+  position: fixed;
+  inset: 0;
+  // In the layout's main: same level as the page panel (Inner, z-index 1) but after it, so above
+  // it; below the piece panel and its close zone (PieceDetail, z-index 2 and 3).
+  // The navbar (z-index 2, outside main) stays above it, sharp.
+  z-index: 1;
+  // The piece's close zone catches the pointer.
+  pointer-events: none;
+  backdrop-filter: blur(5px);
+  // The background color at 50% opacity.
+  background-color: color-mix(in srgb, var(--background) 50%, transparent);
+  // Shown by gsap (autoAlpha) while it is the active blur.
+  visibility: hidden;
+  opacity: 0;
+}
