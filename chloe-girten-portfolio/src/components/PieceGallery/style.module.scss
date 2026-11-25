@@ -17,6 +17,18 @@
     position: relative;
     cursor: pointer;
 
+    // Last item of each row: the panel's own border is already there.
+    &:nth-child(3n) {
+      border-right: none;
+    }
+
+    // Last row (the first item of the last row, and the ones after it): scrolled to the end,
+    // it lies on the panel's bottom border.
+    &:nth-child(3n + 1):nth-last-child(-n + 3),
+    &:nth-child(3n + 1):nth-last-child(-n + 3) ~ .galleryItem {
+      border-bottom: none;
+    }
+
     .background {
       position: absolute;
       inset: 0;
