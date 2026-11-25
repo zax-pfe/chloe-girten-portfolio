@@ -8,10 +8,8 @@
     box-sizing: border-box;
     flex: 0 0 calc((100%) / 3);
     min-width: 0;
-    // width: 411px;
-    height: 480px;
-    flex-shrink: 0;
-    aspect-ratio: 3/4;
+    // Height follows the column width, so cells stay 3/4 at any screen size.
+    aspect-ratio: 3 / 4;
     border-bottom: 1px solid #000;
     border-right: 1px solid #000;
     position: relative;
