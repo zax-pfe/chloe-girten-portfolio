@@ -5,6 +5,7 @@ import { Image } from "next-sanity/image";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
+import { useLenis } from "lenis/react";
 import { usePieceTransitionStore } from "@/store/store";
 import {
   createGhost,
@@ -15,6 +16,8 @@ import {
   getPanel,
   PANEL_DURATION,
   PANEL_EASE,
+  REWIND_DURATION,
+  REWIND_EASE,
   motionDuration,
   pieceFlipId,
 } from "./transition";
@@ -38,6 +41,9 @@ export default function PieceDetail({ piece }) {
   const isClosing = usePieceTransitionStore((state) => state.isClosing);
   const requestClose = usePieceTransitionStore((state) => state.requestClose);
   const endClose = usePieceTransitionStore((state) => state.endClose);
+  const setReturnState = usePieceTransitionStore((state) => state.setReturnState);
+  // Smooth scroll of this page (PageWrapper).
+  const lenis = useLenis();
 
   const rootRef = useRef(null);
   const heroRef = useRef(null);
@@ -96,14 +102,41 @@ export default function PieceDetail({ piece }) {
     return () => context.revert();
   }, [piece.id]);
 
-  // Closing (close zones, Escape): back to the grid straight away. A copy of this page stays
-  // in the panel and fades out while the panel goes back to its size; the grid fades in after
-  // (see Inner).
+  // Closing (close zones, Escape): the opening played backwards. Scrolled down, the page first
+  // scrolls back up to the image. Then back to the grid, which brings the image back into its
+  // item while the panel goes back to its size (see PieceGallery). A copy of the rest of this
+  // page (title, text...) stays in the panel and fades out meanwhile.
   useEffect(() => {
     if (!isClosing) return;
-    createGhost(rootRef.current);
-    router.push("/pieces");
-  }, [isClosing, router]);
+    let cancelled = false;
+    const close = () => {
+      if (cancelled) return;
+      const hero = heroRef.current;
+      setReturnState({
+        id: piece.id,
+        state: Flip.getState([hero, getPanel(hero)]),
+        ghost: createGhost(rootRef.current, hero),
+      });
+      router.push("/pieces");
+    };
+
+    const rewindDuration = motionDuration(REWIND_DURATION);
+    if (lenis && lenis.scroll > 1 && rewindDuration > 0) {
+      lenis.scrollTo(0, {
+        duration: rewindDuration,
+        easing: gsap.parseEase(REWIND_EASE),
+        // No scrolling by the user meanwhile.
+        lock: true,
+        force: true,
+        onComplete: close,
+      });
+    } else {
+      close();
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [isClosing, lenis, piece.id, router, setReturnState]);
 
   useEffect(() => endClose, [endClose]);
 

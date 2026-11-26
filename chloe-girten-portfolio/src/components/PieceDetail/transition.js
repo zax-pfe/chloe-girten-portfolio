@@ -17,6 +17,20 @@ export const RESIZE_EASE = "power3.out";
 // Content swaps: the other grid items before opening, the piece page before closing, the grid after.
 export const FADE_DURATION = 0.4;
 export const FADE_EASE = "power1.inOut";
+// Closing a scrolled piece page: it scrolls back up to its image first, for the image to go
+// back into the grid from where it was opened.
+export const REWIND_DURATION = 0.7;
+export const REWIND_EASE = "power3.inOut";
+// Back on the grid, the other items come back around the piece, one ring of cells after
+// another: delay per cell of distance, up to RIPPLE_MAX_CELLS cells away.
+// They start once the panel is well on its way (RIPPLE_START, share of PANEL_DURATION).
+export const RIPPLE_STEP = 0.07;
+export const RIPPLE_MAX_CELLS = 4;
+export const RIPPLE_START = 0.35;
+
+// Scrolling element of a page (PageWrapper).
+export const PAGE_SCROLL_SELECTOR = "[data-page-scroll]";
+export const getPageScroll = (element) => element.closest(PAGE_SCROLL_SELECTOR);
 
 // Ties a grid item to the piece page's image, for Flip.
 export const pieceFlipId = (id) => `piece-${id}`;

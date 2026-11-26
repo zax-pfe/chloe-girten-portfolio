@@ -7,7 +7,7 @@ import styles from "./style.module.scss";
 // data-lenis-prevent keeps the root Lenis (window) out of it.
 export default function PageWrapper({ children }) {
   return (
-    <ReactLenis className={styles.pageWrapper} options={{ syncTouch: true }} data-lenis-prevent>
+    <ReactLenis className={styles.pageWrapper} options={{ syncTouch: true }} data-lenis-prevent data-page-scroll>
       {children}
     </ReactLenis>
   );

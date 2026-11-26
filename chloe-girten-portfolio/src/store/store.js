@@ -14,7 +14,14 @@ export const usePieceTransitionStore = create((set) => ({
   // { id, state }: Flip state of the clicked grid item, played by the piece page it opens.
   flipState: null,
   setFlipState: (flipState) => set({ flipState }),
-  // Set by the close zones and Escape: the piece page fades out, then goes back to the grid.
+  // { id, state, ghost }: Flip state of a closed piece page's image (and panel), played by the
+  // grid, which brings the image back into its item.
+  returnState: null,
+  setReturnState: (returnState) => set({ returnState }),
+  // Scroll of the grid when a piece was opened: the grid is back there when the piece closes.
+  gridScroll: 0,
+  setGridScroll: (gridScroll) => set({ gridScroll }),
+  // Set by the close zones and Escape: the piece page goes back to the grid (see PieceDetail).
   isClosing: false,
   requestClose: () => set({ isClosing: true }),
   endClose: () => set({ isClosing: false }),

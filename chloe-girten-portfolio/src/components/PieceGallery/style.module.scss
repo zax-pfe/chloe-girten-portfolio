@@ -29,6 +29,12 @@
       border-bottom: none;
     }
 
+    // Images of the item, moved by Flip to and from the piece page.
+    .visual {
+      position: absolute;
+      inset: 0;
+    }
+
     .background {
       position: absolute;
       inset: 0;
