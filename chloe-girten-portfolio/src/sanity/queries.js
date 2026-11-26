@@ -7,6 +7,8 @@ export const PIECES_QUERY = defineQuery(`
     "id": _id,
     title,
     date,
+    size,
+    material,
     description,
     "url": image.asset->url,
     "urlNoBg": imageNoBg.asset->url
