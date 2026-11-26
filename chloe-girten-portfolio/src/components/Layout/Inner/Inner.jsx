@@ -19,7 +19,7 @@ import styles from "./style.module.scss";
 // Pages shown in a smaller panel.
 export const COMPACT_PATHS = ["/contact"];
 
-// A piece page (/pieces/[id]), shown in a tall portrait panel.
+// A piece page (/pieces/[slug]), shown in a tall portrait panel.
 export const isPiecePath = (pathname) => /^\/pieces\/[^/]+$/.test(pathname);
 
 const getPanelMode = (pathname) => {

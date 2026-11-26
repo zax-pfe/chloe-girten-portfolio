@@ -2,8 +2,22 @@ import { defineQuery } from "next-sanity";
 
 // Pieces without both images are skipped, the gallery needs the two to overlay them.
 // Ordered by drag and drop in the studio (orderRank); pieces not ordered yet fall back to the date.
+// "slug": the piece page is /pieces/<slug>; the id stands in until the slug is set in the studio.
 export const PIECES_QUERY = defineQuery(`
   *[_type == "piece" && defined(image.asset) && defined(imageNoBg.asset)] | order(orderRank asc, date desc, _createdAt desc) {
+    "id": _id,
+    "slug": coalesce(slug.current, _id),
+    title,
+    "url": image.asset->url,
+    "urlNoBg": imageNoBg.asset->url
+  }
+`);
+
+// One piece, for its page (/pieces/[slug]), by slug (or by id, see PIECES_QUERY).
+// The image sizes let the page show each image at its own ratio.
+// "gallery": the other images, in the studio order, shown after the main one.
+export const PIECE_QUERY = defineQuery(`
+  *[_type == "piece" && defined(image.asset) && (slug.current == $slug || _id == $slug)][0] {
     "id": _id,
     title,
     date,
@@ -11,20 +25,14 @@ export const PIECES_QUERY = defineQuery(`
     material,
     description,
     "url": image.asset->url,
-    "urlNoBg": imageNoBg.asset->url
-  }
-`);
-
-// One piece, for its page (/pieces/[id]). The image size lets the page show it at its own ratio.
-export const PIECE_QUERY = defineQuery(`
-  *[_type == "piece" && _id == $id && defined(image.asset)][0] {
-    "id": _id,
-    title,
-    date,
-    description,
-    "url": image.asset->url,
     "width": image.asset->metadata.dimensions.width,
-    "height": image.asset->metadata.dimensions.height
+    "height": image.asset->metadata.dimensions.height,
+    "gallery": coalesce(gallery, [])[defined(asset)] {
+      "key": _key,
+      "url": asset->url,
+      "width": asset->metadata.dimensions.width,
+      "height": asset->metadata.dimensions.height
+    }
   }
 `);
 

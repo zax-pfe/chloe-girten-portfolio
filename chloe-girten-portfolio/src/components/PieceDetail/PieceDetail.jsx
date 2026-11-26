@@ -23,11 +23,6 @@ import {
 } from "./transition";
 import styles from "./style.module.scss";
 
-// Placeholder content until the piece has more images and text in Sanity.
-const PLACEHOLDER_IMAGE_COUNT = 2;
-const PLACEHOLDER_TEXT =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-
 // Panel width at the largest screens: 4 of 8 columns.
 const HERO_SIZES = "50vw";
 // Same as the grid items: the image is already loaded when the page opens.
@@ -189,18 +184,30 @@ export default function PieceDetail({ piece }) {
       </div>
 
       <div className={styles.more} ref={moreRef}>
-        {Array.from({ length: PLACEHOLDER_IMAGE_COUNT }, (_, index) => (
+        {/* The other images of the piece, in the studio order. */}
+        {piece.gallery.map((image) => (
           <Image
-            key={index}
-            src={piece.url}
+            key={image.key}
+            src={image.url}
             alt=""
             className={styles.image}
-            width={piece.width}
-            height={piece.height}
+            width={image.width}
+            height={image.height}
             sizes={HERO_SIZES}
           />
         ))}
-        <p className={styles.text}>{PLACEHOLDER_TEXT}</p>
+
+        {/* Last screen of the panel, the details at its bottom. */}
+        <div className={styles.info}>
+          {(piece.size || piece.material) && (
+            <div className={styles.specs}>
+              {piece.size && <p>{piece.size}</p>}
+              {piece.material && <p>{piece.material}</p>}
+            </div>
+          )}
+          <p className={styles.year}>{piece.date}</p>
+          <p className={styles.description}>{piece.description}</p>
+        </div>
       </div>
     </article>
   );

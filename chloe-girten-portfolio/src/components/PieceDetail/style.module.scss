@@ -53,10 +53,38 @@
       border-bottom: 1px solid #000;
     }
 
-    .text {
-      padding: 20px;
-      font: var(--font-piece-text);
+    // Last screen of the panel (100cqh = panel height), the text at its bottom.
+    // Four columns, on the grid lines.
+    .info {
+      height: 100cqh;
+      padding: 0 10px 30px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      column-gap: var(--grid-gutter);
+      row-gap: 60px;
+      align-content: end;
       color: #000;
+
+      .specs {
+        grid-column: 3 / -1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font: var(--font-piece-text);
+      }
+
+      .year,
+      .description {
+        font: var(--font-piece-info);
+      }
+
+      .year {
+        grid-column: 1 / 3;
+      }
+
+      .description {
+        grid-column: 3 / -1;
+      }
     }
   }
 }

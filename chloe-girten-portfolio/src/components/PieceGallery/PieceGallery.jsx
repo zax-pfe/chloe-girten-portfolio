@@ -31,7 +31,8 @@ const backgroundVariants = {
   hover: { opacity: 1 },
 };
 
-const pieceHref = (id) => `/pieces/${id}`;
+// Page of a piece: its slug, or its id while it has none (see PIECES_QUERY).
+const pieceHref = (slug) => `/pieces/${slug}`;
 
 // Part of an item that Flip moves (see PieceGalleryItem).
 const getVisual = (item) => item.querySelector("[data-flip-id]");
@@ -136,7 +137,7 @@ export default function PieceGallery({ items }) {
   // Opens the piece page, which flips the clicked item's image into place (see PieceDetail).
   // The grid is replaced as soon as the page changes: a copy of it stays in the panel,
   // for the other items to fade out while the image and the panel move.
-  const openPiece = (id, item) => {
+  const openPiece = (id, slug, item) => {
     if (openingRef.current) return;
     openingRef.current = true;
     const gallery = galleryRef.current;
@@ -148,7 +149,7 @@ export default function PieceGallery({ items }) {
       state: Flip.getState([getVisual(item), getPanel(item)]),
       ghost: createGhost(gallery, item),
     });
-    router.push(pieceHref(id));
+    router.push(pieceHref(slug));
   };
 
   return (
@@ -161,8 +162,8 @@ export default function PieceGallery({ items }) {
           noBgSrc={item.urlNoBg}
           name={item.title}
           held={item.id === heldId}
-          onOpen={openPiece}
-          onPrefetch={() => router.prefetch(pieceHref(item.id))}
+          onOpen={(element) => openPiece(item.id, item.slug, element)}
+          onPrefetch={() => router.prefetch(pieceHref(item.slug))}
         />
       ))}
     </div>
@@ -189,7 +190,7 @@ function PieceGalleryItem({ id, src, noBgSrc, name, held, onOpen, onPrefetch }) 
         onPrefetch();
       }}
       onHoverEnd={() => clearHovered("piece")}
-      onClick={(event) => onOpen(id, event.currentTarget)}
+      onClick={(event) => onOpen(event.currentTarget)}
     >
       {/* Same id as the piece page's image, which Flip animates from and back to this layer. */}
       <div className={styles.visual} data-flip-id={pieceFlipId(id)}>

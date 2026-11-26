@@ -9,7 +9,7 @@ export const usePieceStore = create((set) => ({
   clearPiece: () => set({ selectedPiece: null }),
 }));
 
-// Hand-off between the pieces grid and a piece page (/pieces/[id]).
+// Hand-off between the pieces grid and a piece page (/pieces/[slug]).
 export const usePieceTransitionStore = create((set) => ({
   // { id, state }: Flip state of the clicked grid item, played by the piece page it opens.
   flipState: null,
