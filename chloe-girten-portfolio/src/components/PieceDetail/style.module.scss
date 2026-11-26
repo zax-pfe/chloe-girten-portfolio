@@ -10,11 +10,15 @@
     z-index: 1;
     height: 0;
     overflow: visible;
+    // In negative: white, inverting what's under it (the images, the panel background).
+    // On the bar, not the title: the bar (sticky with a z-index) is a stacking context, the
+    // title would only blend with the bar itself.
+    mix-blend-mode: difference;
 
     .title {
       padding: 10px;
       font: var(--font-piece-name);
-      color: #000;
+      color: #fff;
       // Revealed by gsap (autoAlpha) once the image is in place.
       visibility: hidden;
     }
