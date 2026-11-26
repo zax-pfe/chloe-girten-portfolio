@@ -8,18 +8,18 @@ export { Flip };
 // Grid -> piece page: the image flips from its grid item while the panel resizes, slow enough
 // to follow the image with the eye. Same duration and ease for both: the image's edges then
 // follow the panel's and never get clipped.
-export const PANEL_DURATION = 0.8;
+export const PANEL_DURATION = 0.7;
 export const PANEL_EASE = "power3.inOut";
 // The panel moving alone (back to the grid, back/forward, navbar): there is nothing to follow
 // with the eye, so it's shorter, starting fast and settling into place.
-export const RESIZE_DURATION = 0.8;
+export const RESIZE_DURATION = 0.6;
 export const RESIZE_EASE = "power3.out";
 // Content swaps: the other grid items before opening, the piece page before closing, the grid after.
 export const FADE_DURATION = 0.4;
 export const FADE_EASE = "power1.inOut";
 // Closing a scrolled piece page: it scrolls back up to its image first, for the image to go
 // back into the grid from where it was opened.
-export const REWIND_DURATION = 0.7;
+export const REWIND_DURATION = 0.3;
 export const REWIND_EASE = "power3.inOut";
 // Back on the grid, the other items come back around the piece, one ring of cells after
 // another: delay per cell of distance, up to RIPPLE_MAX_CELLS cells away.

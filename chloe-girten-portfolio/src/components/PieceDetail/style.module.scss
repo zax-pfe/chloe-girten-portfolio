@@ -20,13 +20,17 @@
     }
   }
 
-  // Fills the panel (100cqh = panel height). Flip animates it from the grid item.
+  // At the top of the panel, full width, with the image's proportions (set inline): its height
+  // comes from them, like the images under it, so the image is never cropped. Without them, it
+  // fills the panel (100cqh = panel height). Flip animates it from the grid item.
   .hero {
     position: relative;
     width: 100%;
     height: 100cqh;
     overflow: hidden;
     border-bottom: 1px solid #000;
+    // The border under the box: the image gets the whole box, at its exact proportions.
+    box-sizing: content-box;
 
     .heroImage {
       object-fit: cover;

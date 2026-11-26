@@ -167,7 +167,13 @@ export default function PieceDetail({ piece }) {
         </h2>
       </div>
 
-      <div className={styles.hero} ref={heroRef} data-flip-id={pieceFlipId(piece.id)}>
+      <div
+        className={styles.hero}
+        ref={heroRef}
+        data-flip-id={pieceFlipId(piece.id)}
+        // The image's own proportions, like the images under it: shown whole, never cropped.
+        style={piece.width && piece.height ? { aspectRatio: `${piece.width} / ${piece.height}`, height: "auto" } : undefined}
+      >
         <Image src={piece.url} alt={piece.title} className={styles.heroImage} fill sizes={GRID_SIZES} loading="eager" />
         <Image
           src={piece.url}
