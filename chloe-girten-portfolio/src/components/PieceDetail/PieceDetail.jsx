@@ -21,6 +21,7 @@ import {
   motionDuration,
   pieceFlipId,
 } from "./transition";
+import CursorTarget from "../CursorTarget/CursorTarget";
 import styles from "./style.module.scss";
 
 // Panel width at the largest screens: 4 of 8 columns.
@@ -154,7 +155,8 @@ export default function PieceDetail({ piece }) {
   };
 
   return (
-    <article className={styles.pieceDetail} ref={rootRef}>
+    // The whole page: shows "scroll v" next to the cursor while hovered.
+    <CursorTarget as="article" type="scroll" className={styles.pieceDetail} ref={rootRef}>
       {/* Stays at the top of the panel, over the images, while the page scrolls. */}
       <div className={styles.titleBar}>
         <h2 className={styles.title} ref={titleRef}>
@@ -209,6 +211,6 @@ export default function PieceDetail({ piece }) {
           <p className={styles.description}>{piece.description}</p>
         </div>
       </div>
-    </article>
+    </CursorTarget>
   );
 }

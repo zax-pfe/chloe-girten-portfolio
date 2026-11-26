@@ -2,13 +2,14 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
-import { useCursorStore } from "@/store/store";
+import { lastPointer, useCursorStore } from "@/store/store";
 import styles from "./style.module.scss";
 
 // Label shown for each kind of hovered element.
 const LABELS = {
   piece: "view",
   close: "close x",
+  scroll: "scroll v",
   previous: "<",
   next: ">",
 };
@@ -33,6 +34,8 @@ export default function CursorFollower() {
     const handleMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
+      lastPointer.x = e.clientX;
+      lastPointer.y = e.clientY;
     };
 
     window.addEventListener("mousemove", handleMove);
