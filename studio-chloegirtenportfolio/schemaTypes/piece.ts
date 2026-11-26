@@ -1,6 +1,6 @@
 import {ImageIcon} from '@sanity/icons/Image'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export const piece = defineType({
   name: 'piece',
@@ -35,6 +35,18 @@ export const piece = defineType({
       type: 'string',
       validation: (rule) => rule.required(),
     }),
+    // URL of the piece page: /pieces/<slug>.
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      description: "Adresse de la page de la pièce (/pieces/good-boy). Cliquer sur « Generate » pour la créer depuis le titre.",
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: 'date',
       title: 'Année',
@@ -62,6 +74,24 @@ export const piece = defineType({
       type: 'text',
       rows: 4,
       validation: (rule) => rule.required(),
+    }),
+    // Shown after the main image on the piece page, in this order.
+    defineField({
+      name: 'gallery',
+      title: 'Autres images',
+      description: "Affichées après l'image principale sur la page de la pièce. Glisser-déposer pour changer l'ordre.",
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        }),
+      ],
+      options: {
+        layout: 'grid',
+      },
     }),
   ],
   preview: {
