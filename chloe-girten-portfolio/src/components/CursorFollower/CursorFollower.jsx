@@ -9,6 +9,7 @@ import styles from "./style.module.scss";
 const LABELS = {
   piece: "view",
   close: "close x",
+  back: "back <",
   scroll: "scroll v",
   previous: "<",
   next: ">",

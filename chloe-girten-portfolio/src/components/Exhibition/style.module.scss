@@ -5,6 +5,11 @@
   border-bottom: 1px solid #000;
   cursor: pointer;
 
+  // The last one: scrolled to the end, it lies on the panel's bottom border.
+  &:last-child {
+    border-bottom: none;
+  }
+
   .infos {
     display: grid;
     // Name and year each take one column of the page grid, the description the rest.

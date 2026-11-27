@@ -6,7 +6,7 @@ import CursorTarget from "../CursorTarget/CursorTarget";
 import { COMPACT_PATHS, isPiecePath } from "../Layout/Inner/Inner";
 import styles from "./style.module.scss";
 
-// Invisible areas that show "close x" while hovered.
+// Invisible areas that show "close x" while hovered, or "back <" on a piece page.
 // On the home page, while a piece is open: the whole screen, clicking it closes the piece.
 // On the other pages: one over the title, and one on the right of the screen for the pages
 // in a smaller panel, where that side is empty. Clicking them goes back home, or back to the
@@ -26,7 +26,8 @@ export default function CloseZone() {
 
   const isPiecePage = isPiecePath(pathname);
   const zone = {
-    type: "close",
+    // From a piece page, they go back to the grid.
+    type: isPiecePage ? "back" : "close",
     onClick: isPiecePage ? requestClose : () => router.push("/"),
     "aria-hidden": true,
   };
