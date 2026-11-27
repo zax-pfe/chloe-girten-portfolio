@@ -13,10 +13,9 @@ export const floatingPieces = defineType({
       name: 'pieces',
       title: 'Œuvres flottantes',
       description:
-        "Œuvres qui flottent en fond du site, avec leur image détourée. Au clic, leur fiche s'ouvre.",
+        "Œuvres qui flottent en fond du site, dans cet ordre (glisser-déposer pour le changer). « Add item » pour en créer une. Au clic, leur fiche s'ouvre.",
       type: 'array',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'piece'}]})],
-      validation: (rule) => rule.unique(),
+      of: [defineArrayMember({type: 'floatingPiece'})],
     }),
   ],
   preview: {
